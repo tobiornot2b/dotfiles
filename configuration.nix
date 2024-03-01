@@ -57,7 +57,35 @@
   services.xserver = {
     layout = "us";
     xkbVariant = "";
+    enable = true;
+    desktopManager = {
+      xterm.enable = true;
+      xfce = {
+        enable = true;
+        noDesktop = true;
+        enableXfwm = false;
+      };
+    };
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+      flake = {
+        enable = true;
+        compiler = "ghc947";
+      };
+      extraPackages = haskellPackages : [
+        haskellPackages.xmonad-contrib
+        haskellPackages.xmonad-extras
+        haskellPackages.xmonad
+      ];
+      config = builtins.readFile ./xmonad/xmonad.hs;
+      enableConfiguredRecompile = true;
+    };
   };
+
+  # VirtualBox
+  virtualisation.virtualbox.guest.enable = true;
+  virtualisation.virtualbox.guest.x11 = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tobi = {
