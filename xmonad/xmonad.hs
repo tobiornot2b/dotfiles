@@ -1,7 +1,7 @@
 import XMonad
 
 main = xmonad def
-     { terminal = "xfce4-terminal"
+     { terminal = "alacritty"
      , modMask  = mod4Mask
      , borderWidth = 2
      }
