@@ -110,6 +110,13 @@
     arandr
   ];
 
+  # Fonts
+  fonts.packages = with pkgs; [
+    font-awesome
+    fira-code
+    mononoki
+  ];
+
   environment.shells = with pkgs; [ zsh ];
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true;

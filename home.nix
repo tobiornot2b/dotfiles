@@ -29,5 +29,7 @@
     enable = true;
   };
 
+  programs.xmobar.enable = true;
+
   programs.home-manager.enable = true;
 }
