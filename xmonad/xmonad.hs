@@ -19,6 +19,9 @@ import qualified XMonad.StackSet as W
 myTerminal :: String
 myTerminal = "alacritty"
 
+myBrowser :: String
+myBrowser = "firefox"
+
 myModMask :: KeyMask
 myModMask = mod4Mask
 
@@ -35,6 +38,10 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 myKeys :: [(String, X ())]
 myKeys = 
        [ ("M-C-r", spawn "xmonad --recompile")
+        --- Programs
+       , ("M-<Enter>", spawn myTerminal)          
+       , ("M-w", spawn myBrowser)          
+        --- Other
        , ("M-<Tab>", sendMessage NextLayout)           -- Switch to next layout
        ]
 
