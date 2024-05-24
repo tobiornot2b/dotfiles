@@ -39,7 +39,7 @@ myKeys :: [(String, X ())]
 myKeys = 
        [ ("M-C-r", spawn "xmonad --recompile")
         --- Programs
-       , ("M-<Enter>", spawn myTerminal)          
+       , ("M-<Return>", spawn myTerminal)          
        , ("M-w", spawn myBrowser)          
         --- Other
        , ("M-<Tab>", sendMessage NextLayout)           -- Switch to next layout
