@@ -21,6 +21,8 @@
     };
   };
 
+  programs.tmux.enable = true;
+
   programs.alacritty = {	
     enable = true;
   };
