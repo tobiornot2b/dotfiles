@@ -23,6 +23,11 @@
 
   programs.tmux.enable = true;
 
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.alacritty = {	
     enable = true;
   };
