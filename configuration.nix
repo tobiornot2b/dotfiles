@@ -95,6 +95,9 @@
     packages = with pkgs; [];
   };
 
+  # Clipcat service (Clipboard)
+  services.clipcat.enable = true;
+
   # Enable automatic login for the user.
   services.getty.autologinUser = "tobi";
 
@@ -108,6 +111,7 @@
     wget
     git
     arandr
+    clipcat
   ];
 
   # Fonts
