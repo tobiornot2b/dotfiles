@@ -6,9 +6,10 @@
     home-manager.url = "github:nix-community/home-manager/release-23.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     xmonad-contrib.url = "github:xmonad/xmonad-contrib";
+    agenix.url = "github:ryantm/agenix";
   };
 
-  outputs = { self, nixpkgs, home-manager, xmonad-contrib, ... }:
+  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, ... }:
     let 
       lib = nixpkgs.lib;
       system = "x86_64-linux";
@@ -19,6 +20,10 @@
          inherit system;
          modules = [
             ./configuration.nix 
+            agenix.nixosModules.default
+            {
+              environment.systemPackages = [ agenix.packages.${system}.default ];
+            }
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

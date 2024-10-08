@@ -87,12 +87,14 @@
   virtualisation.virtualbox.guest.enable = true;
   virtualisation.virtualbox.guest.x11 = true;
 
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tobi = {
     isNormalUser = true;
     description = "Tobi";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
+    hashedPasswordFile = config.age.secrets.secret1.path;
   };
 
   # Clipcat service (Clipboard)
@@ -124,6 +126,10 @@
   environment.shells = with pkgs; [ zsh ];
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true;
+  age.identityPaths = [
+    "/etc/id_ed25519"
+  ];
+  age.secrets.secret1.file = ./secrets/secret1.age;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -136,7 +142,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
