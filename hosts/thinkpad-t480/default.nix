@@ -78,7 +78,7 @@
         haskellPackages.xmonad-extras
         haskellPackages.xmonad
       ];
-      config = builtins.readFile ./xmonad/xmonad.hs;
+      config = builtins.readFile ../../modules/xmonad/xmonad.hs;
       enableConfiguredRecompile = true;
     };
   };
@@ -129,7 +129,7 @@
   age.identityPaths = [
     "/etc/id_ed25519"
   ];
-  age.secrets.secret1.file = ./secrets/secret1.age;
+  age.secrets.secret1.file = ../../secrets/secret1.age;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

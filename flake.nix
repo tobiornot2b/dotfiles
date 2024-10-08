@@ -1,11 +1,11 @@
 {
-  description = "My first flake";
+  description = "NixOS Setup from tobi";
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-23.11";
     home-manager.url = "github:nix-community/home-manager/release-23.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    xmonad-contrib.url = "github:xmonad/xmonad-contrib";
+    xmonad-contrib.url = "github:xmonad/xmonad-contrib/v0.18.0";
     agenix.url = "github:ryantm/agenix";
   };
 
@@ -19,7 +19,8 @@
       tobi = lib.nixosSystem rec {
          inherit system;
          modules = [
-            ./configuration.nix 
+            ./hosts/thinkpad-t480 
+
             agenix.nixosModules.default
             {
               environment.systemPackages = [ agenix.packages.${system}.default ];
