@@ -80,9 +80,9 @@ myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
     delta   = 3/100
 
 main = do
-  xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.dotfiles/xmonad/xmobarrc")
-  xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.dotfiles/xmonad/xmobarrc")
-  xmproc3 <- spawnPipe ("xmobar -x 3 $HOME/.dotfiles/xmonad/xmobarrc")
+  xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.dotfiles/modules/xmonad/xmobarrc")
+  xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.dotfiles/modules/xmonad/xmobarrc")
+  xmproc3 <- spawnPipe ("xmobar -x 3 $HOME/.dotfiles/modules/xmonad/xmobarrc")
   xmonad $ docks $ (defaults xmproc1 xmproc2 xmproc3) `additionalKeysP` myKeys
 
 defaults xmproc xmproc1 xmproc2 = def
