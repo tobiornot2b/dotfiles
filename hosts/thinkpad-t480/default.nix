@@ -55,9 +55,11 @@
 
   # Configure keymap in X11
   services.xserver = {
-    layout = "us";
-    xkbVariant = "";
     enable = true;
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
     desktopManager = {
       xterm.enable = true;
       xfce = {
@@ -85,7 +87,6 @@
 
   # VirtualBox
   virtualisation.virtualbox.guest.enable = true;
-  virtualisation.virtualbox.guest.x11 = true;
 
 
   users.users.tobi = {
