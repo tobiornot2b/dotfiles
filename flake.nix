@@ -29,7 +29,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.tobi = import ./home.nix;
+              home-manager.users.tobi = import ./hosts/thinkpad-t480/home.nix;
             }
          ] ++ xmonad-contrib.nixosModules ++ [
            xmonad-contrib.modernise.${system}

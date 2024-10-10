@@ -88,7 +88,6 @@
   virtualisation.virtualbox.guest.x11 = true;
 
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tobi = {
     isNormalUser = true;
     description = "Tobi";
@@ -96,9 +95,6 @@
     packages = with pkgs; [];
     hashedPasswordFile = config.age.secrets.secret1.path;
   };
-
-  # Clipcat service (Clipboard)
-  services.clipcat.enable = true;
 
   # Enable automatic login for the user.
   services.getty.autologinUser = "tobi";
@@ -115,6 +111,9 @@
     arandr
     clipcat
   ];
+
+  # Clipcat service (Clipboard)
+  services.clipcat.enable = true;
 
   # Fonts
   fonts.packages = with pkgs; [
