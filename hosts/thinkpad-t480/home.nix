@@ -13,7 +13,7 @@
   programs.home-manager.enable = true;
 
   programs.git = {
-    userName = "Tobias Maede";
+    userName = "tobiornot2b";
     userEmail = "tobias.maede@gmail.com";
   };
 }
