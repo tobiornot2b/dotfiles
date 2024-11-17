@@ -25,6 +25,8 @@ nix flake update
 This will update the versions in the flake file. Maybe there are `sudo` permissions needed to update the files.
 To apply the changes the system need to be rebuilded.
 
+The NixOS Version can be updated by changing the input versions in the flake.nix to the prefered version. A new OS Version needs some space so ensure that there is enough space (>10 GB).
+
 ## System cleanup
 
 **Delete all historical versions older than 7 days**

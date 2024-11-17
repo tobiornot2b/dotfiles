@@ -54,36 +54,40 @@
   };
 
   # Configure keymap in X11
-  services.xserver = {
-    enable = true;
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
-    desktopManager = {
-      xterm.enable = true;
-      xfce = {
-        enable = true;
-        noDesktop = true;
-        enableXfwm = false;
-      };
-    };
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
-      flake = {
-        enable = true;
-        compiler = "ghc947";
-      };
-      extraPackages = haskellPackages : [
-        haskellPackages.xmonad-contrib
-        haskellPackages.xmonad-extras
-        haskellPackages.xmonad
-      ];
-      config = builtins.readFile ../../modules/xmonad/xmonad.hs;
-      enableConfiguredRecompile = true;
-    };
-  };
+ # services.xserver = {
+ #   enable = true;
+ #   xkb = {
+ #     layout = "us";
+ #     variant = "";
+ #   };
+ #   desktopManager = {
+ #     xterm.enable = true;
+ #     xfce = {
+ #       enable = true;
+ #       noDesktop = true;
+ #       enableXfwm = false;
+ #     };
+ #   };
+ #   windowManager.xmonad = {
+ #     enable = true;
+ #     enableContribAndExtras = true;
+ #     flake = {
+ #       enable = true;
+ #       compiler = "ghc947";
+ #     };
+ #     extraPackages = haskellPackages : [
+ #       haskellPackages.xmonad-contrib
+ #       haskellPackages.xmonad-extras
+ #       haskellPackages.xmonad
+ #     ];
+ #     config = builtins.readFile ../../modules/xmonad/xmonad.hs;
+ #     enableConfiguredRecompile = true;
+ #   };
+ # };
+
+  # Needed for sway
+  security.polkit.enable = true;
+
 
   # VirtualBox
   virtualisation.virtualbox.guest.enable = true;
