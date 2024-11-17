@@ -88,10 +88,24 @@
   # Needed for sway
   security.polkit.enable = true;
 
+  services.xserver.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+
+  services.gnome.gnome-keyring.enable = true;
+
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+  };
+
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
 
   # VirtualBox
   virtualisation.virtualbox.guest.enable = true;
-
 
   users.users.tobi = {
     isNormalUser = true;
@@ -115,6 +129,11 @@
     git
     arandr
     clipcat
+    # sway
+    grim
+    slurp
+    wl-clipboard
+    mako
   ];
 
   # Clipcat service (Clipboard)

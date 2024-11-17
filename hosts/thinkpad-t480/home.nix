@@ -14,6 +14,6 @@
 
   programs.git = {
     userName = "tobiornot2b";
-    userEmail = "tobias.maede@gmail.com";
+    userEmail = "pgpg.toby@gmail.com";
   };
 }
