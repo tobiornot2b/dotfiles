@@ -38,6 +38,7 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 myKeys :: [(String, X ())]
 myKeys = 
        [ ("M-C-r", spawn "xmonad --recompile")
+       , ("M-p", spawn "rofi -show drun")          
         --- Programs
        , ("M-<Return>", spawn myTerminal)          
        , ("M-w", spawn myBrowser)          
