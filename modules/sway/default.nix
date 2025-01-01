@@ -7,6 +7,13 @@ in {
   };
 
   config = mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      grim # screenshot functionatily
+      slurp # screenshot functionality
+      wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
+      mako # notification system developed by swaywm maintainer
+    ];
+
     # Needed for sway
     security.polkit.enable = true;
     # Enable the gnome-keyring secrets vault.

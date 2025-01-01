@@ -94,10 +94,6 @@
     arandr
     clipcat
     google-chrome
-    grim # screenshot functionatily
-    slurp # screenshot functionality
-    wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
-    mako # notification system developed by swaywm maintainer
   ];
 
   # Clipcat service (Clipboard)
