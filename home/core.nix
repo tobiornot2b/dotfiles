@@ -22,4 +22,6 @@
   programs.lazygit.enable = true;
 
   programs.vscode.enable = true;
+
+  programs.ranger.enable = true;
 }

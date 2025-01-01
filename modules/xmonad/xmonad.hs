@@ -45,6 +45,7 @@ myKeys =
         --- Programs
        , ("M-<Return>", spawn myTerminal)          
        , ("M-w", spawn myBrowser)          
+       , ("M-e", spawn "ranger")
         --- Other
        , ("M-<Tab>", sendMessage NextLayout)           -- Switch to next layout
        ]
