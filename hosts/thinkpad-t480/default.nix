@@ -10,6 +10,14 @@
       ./hardware-configuration.nix
     ];
 
+  my = {
+    desktop = {
+      sway = {
+        enable = true;
+      };
+    };
+  };
+
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
@@ -53,19 +61,6 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
-  # Needed for sway
-  security.polkit.enable = true;
-  # Enable the gnome-keyring secrets vault.
-  # Will be exposed through DBus to programs willing to store secrets
-  services.gnome.gnome-keyring.enable = true;
-  programs.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true;
-  };
-
-  services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -99,7 +94,6 @@
     arandr
     clipcat
     google-chrome
-    # sway
     grim # screenshot functionatily
     slurp # screenshot functionality
     wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout

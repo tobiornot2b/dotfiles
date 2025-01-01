@@ -35,6 +35,8 @@
             }
          ] ++ xmonad-contrib.nixosModules ++ [
            xmonad-contrib.modernise.${system}
+         ] ++ [
+	    ./modules
          ];
       };
     };
