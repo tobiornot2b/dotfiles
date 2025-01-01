@@ -11,10 +11,12 @@
 
   outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, ... }:
     let 
-      lib = nixpkgs.lib;
+      lib = nixpkgs.lib.extend (self: _: {my = import ./lib {lib = self;};});
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
     in {
+
+
     nixosConfigurations = {
       tobi = lib.nixosSystem rec {
          inherit system;

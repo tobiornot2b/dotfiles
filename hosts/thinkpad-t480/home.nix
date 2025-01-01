@@ -1,10 +1,6 @@
 {pkgs, ...}: {
   imports = [
-    ../../home/core.nix
-    ../../home/clipcat.nix
-    ../../home/sway.nix
-
-    ../../home/shell
+    ../../home
   ];
 
   home.username = "tobi";
