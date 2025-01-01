@@ -12,7 +12,7 @@
 
   my = {
     desktop = {
-      sway = {
+      xmonad = {
         enable = true;
       };
     };
