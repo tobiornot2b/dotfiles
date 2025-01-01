@@ -98,6 +98,7 @@
     git
     arandr
     clipcat
+    google-chrome
     # sway
     grim # screenshot functionatily
     slurp # screenshot functionality
