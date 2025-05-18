@@ -2,8 +2,24 @@
 
 ## Installation
 
-nix run github:nix-community/disko -- --mode disko ./hosts/{host}/disko.nix
-nixos-install --flake .#encrypted-nixos
+### Create partitions with disko
+
+```
+sudo nix run --extra-experimental-features "nix-command flakes" github:nix-community/disko/latest -- --mode disko ./hosts/dell-precision-5560/disko.nix 
+```
+
+### Generate new hardware configuration
+
+```
+sudo nixos-generate-config --root /mnt
+```
+and save it to the needed position (f.e. ./hosts/dell-precision-5560/hardware-configuration.nix)
+
+### Install
+
+```
+nixos-install --flake .#tobixx
+```
 
 ## Building the system
 

@@ -8,15 +8,11 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./disko
     ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  boot.resumeDevice = "/dev/mapper/cryptswap";
-  boot.initrd.luks.devices."cryptswap".device = "/dev/nvme0n1p3";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -86,16 +82,23 @@
     isNormalUser = true;
     description = "Tobias";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    #  thunderbird
-    ];
+    packages = with pkgs; [];
+    hashedPasswordFile = config.age.secrets.secret1.path;
   };
+
+  # Enable automatic login for the user.
+  services.getty.autologinUser = "tobi";
 
   # Install firefox.
   programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  
+  age.identityPaths = [
+    "/etc/id_ed25519"
+  ];
+  age.secrets.secret1.file = ../../secrets/secret1.age;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

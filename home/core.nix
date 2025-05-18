@@ -7,11 +7,7 @@
     enable = true;
   };
 
-  programs.firefox = {
-    enable = true;
-  };
-
-  programs.xmobar.enable = true;
+  # programs.xmobar.enable = true;
 
   programs.fzf.enable = true;
 

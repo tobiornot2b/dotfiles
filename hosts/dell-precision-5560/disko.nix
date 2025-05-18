@@ -1,5 +1,3 @@
-{ config, lib, ... }:
-
 {
   disko.devices = {
     disk.nvme0n1 = {
@@ -18,20 +16,8 @@
             };
           };
 
-          swap = {
-            size = "32G";
-            size = "100%";
-            content = {
-              type = "luks";
-              name = "cryptswap";
-              settings.allowDiscards = true;
-              content = {
-                type = "swap";
-              };
-            };
-          };
-
           luks = {
+  	    size = "100%";
             content = {
               type = "luks";
               name = "cryptroot";

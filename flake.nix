@@ -10,7 +10,7 @@
     disko.url = "github:nix-community/disko";
   };
 
-  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, ... }:
+  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, disko, ... }:
     let 
       lib = nixpkgs.lib.extend (self: _: {my = import ./lib {lib = self;};});
       system = "x86_64-linux";
@@ -44,8 +44,19 @@
       tobixx = lib.nixosSystem rec {
          inherit system;
          modules = [
+	    # Do i need this when i run the disko install on its own?
 	    disko.nixosModules.disko
             ./hosts/dell-precision-5560
+            agenix.nixosModules.default
+            {
+              environment.systemPackages = [ agenix.packages.${system}.default ];
+            }
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.tobi = import ./hosts/dell-precision-5560/home.nix;
+            }
          ];
        };
     };

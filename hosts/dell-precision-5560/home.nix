@@ -4,13 +4,13 @@
   ];
 
   home.username = "tobi";
-  home.homedirectory = "/home/tobi";
-  home.stateversion = "23.11";
+  home.homeDirectory = "/home/tobi";
+  home.stateVersion = "24.11";
 
   programs.home-manager.enable = true;
 
   programs.git = {
-    username = "tobiornot2b";
-    useremail = "pgpg.toby@gmail.com";
+    userName = "tobiornot2b";
+    userEmail = "pgpg.toby@gmail.com";
   };
 }
