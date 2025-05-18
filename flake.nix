@@ -2,11 +2,12 @@
   description = "NixOS Setup from tobi";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-24.05";
-    home-manager.url = "github:nix-community/home-manager/release-24.05";
+    nixpkgs.url = "nixpkgs/nixos-24.11";
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     xmonad-contrib.url = "github:xmonad/xmonad-contrib/v0.18.0";
     agenix.url = "github:ryantm/agenix";
+    disko.url = "github:nix-community/disko";
   };
 
   outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, ... }:
@@ -39,6 +40,14 @@
 	    ./modules
          ];
       };
+
+      tobixx = lib.nixosSystem rec {
+         inherit system;
+         modules = [
+	    disko.nixosModules.disko
+            ./hosts/dell-precision-5560
+         ];
+       };
     };
   };
 }

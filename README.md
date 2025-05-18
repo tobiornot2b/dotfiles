@@ -1,5 +1,10 @@
 # NixOS Configuration
 
+## Installation
+
+nix run github:nix-community/disko -- --mode disko ./hosts/{host}/disko.nix
+nixos-install --flake .#encrypted-nixos
+
 ## Building the system
 
 Every configuration change needs an rebuild of the system. This is done by the following command:
