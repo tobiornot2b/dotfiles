@@ -7,6 +7,12 @@
     enable = true;
   };
 
+  programs.ghostty = {
+    enable = true;
+    package = pkgs.ghostty;
+  };
+
+
   # programs.xmobar.enable = true;
 
   programs.fzf.enable = true;
