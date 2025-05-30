@@ -43,6 +43,13 @@
 
   programs.hyprland.enable = true;
 
+  # font-awesome is needed for waybar f.e.
+  fonts.packages = with pkgs; [
+    font-awesome
+    fira-code
+    mononoki
+  ];
+
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     # Multi graphics

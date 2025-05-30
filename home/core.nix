@@ -12,6 +12,9 @@
     package = pkgs.ghostty;
   };
 
+  programs.yazi = {
+    enable = true;
+  };
 
   # programs.xmobar.enable = true;
 

@@ -17,7 +17,6 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in {
 
-
     nixosConfigurations = {
       tobi = lib.nixosSystem rec {
          inherit system;

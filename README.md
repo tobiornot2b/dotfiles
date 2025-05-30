@@ -73,4 +73,5 @@ nix-collect-garbage --delete-old`
 - [Official option search](https://search.nixos.org/options)
 - [Nix Quellcode](https://github.com/NixOS/nixpkgs/tree/master)
 - [Noogle - Nix Function Search similar to Hoogle for Haskle](https://noogle.dev/)
+- [Hyprland NixOS Reference Repo](https://gitlab.com/Zaney/zaneyos]
 
