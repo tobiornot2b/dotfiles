@@ -2,19 +2,22 @@
   description = "NixOS Setup from tobi";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-24.11";
-    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     xmonad-contrib.url = "github:xmonad/xmonad-contrib/v0.18.0";
     agenix.url = "github:ryantm/agenix";
     disko.url = "github:nix-community/disko";
   };
 
-  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, disko, ... }:
+  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, ... }@inputs:
     let 
       lib = nixpkgs.lib.extend (self: _: {my = import ./lib {lib = self;};});
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        system = system;
+        config.allowUnfree = true;
+      };
     in {
 
     nixosConfigurations = {
@@ -58,6 +61,15 @@
             }
          ];
        };
+    };
+
+    homeConfigurations = {
+      dwp7953 = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./hosts/ubuntu/home.nix
+        ];
+      };
     };
   };
 }

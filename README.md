@@ -66,6 +66,20 @@ https://github.com/NixOS/nix/issues/8508**
 nix-collect-garbage --delete-old`
 ```
 
+## Ubuntu
+
+Make nix available in the current shell:
+
+```
+. /home/dwp7953/.nix-profile/etc/profile.d/nix.sh
+```
+
+Build the current setup:
+
+```
+nix run .#homeConfigurations.dwp7953.activationPackage
+```
+
 ## References
 
 - [NixOS Flake Book](https://nixos-and-flakes.thiscute.world/)
