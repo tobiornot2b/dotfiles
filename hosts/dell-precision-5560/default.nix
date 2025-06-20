@@ -38,8 +38,8 @@
   services.xserver.enable = true;
 
   # GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   programs.hyprland.enable = true;
 
@@ -50,7 +50,7 @@
     mononoki
   ];
 
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [ "displaylink" "modesetting" "nvidia" ];
   hardware.nvidia = {
     # Multi graphics
     prime = {
@@ -91,8 +91,10 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
+  security.polkit.enable = true;
+  security.pam.services.hyprlock = {};
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -136,6 +138,8 @@
     mako
     nwg-look
     swww
+    code-cursor
+    displaylink
     config.boot.kernelPackages.nvidiaPackages.stable
   ];
 

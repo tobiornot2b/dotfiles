@@ -66,6 +66,20 @@ https://github.com/NixOS/nix/issues/8508**
 nix-collect-garbage --delete-old`
 ```
 
+## Display Link
+
+In order to install the DisplayLink drivers, you must first
+   > comply with DisplayLink's EULA and download the binaries and
+   > sources from here:
+   >
+   > https://www.synaptics.com/products/displaylink-graphics/downloads/ubuntu-6.1
+   >
+   > Once you have downloaded the file, please use the following
+   > commands and re-run the installation:
+   >
+   > mv $PWD/"DisplayLink USB Graphics Software for Ubuntu6.1-EXE.zip" $PWD/displaylink-610.zip
+   > nix-prefetch-url file://$PWD/displaylink-600.zip
+
 ## References
 
 - [NixOS Flake Book](https://nixos-and-flakes.thiscute.world/)
