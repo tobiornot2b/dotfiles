@@ -20,8 +20,6 @@
 
   programs.fzf.enable = true;
 
-  programs.rofi.enable = true;
-
   programs.ripgrep.enable = true;
 
   programs.lazygit.enable = true;
