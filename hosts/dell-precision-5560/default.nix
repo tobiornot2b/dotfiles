@@ -34,6 +34,11 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
+  # UDEV for changing monitors
+  services.udev.extraRules = ''
+    SUBSYSTEM=="drm", ACTION=="change", RUN+="${pkgs.writeShellScriptBin "udev_hypr_monitor" (builtins.readFile ../../modules/udev/monitors-reconfigure.sh)}"
+  '';
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -138,6 +143,7 @@
     rofi-wayland
     waybar
     mako
+    arandr
     nwg-look
     swww
     code-cursor
@@ -145,6 +151,7 @@
     telegram-desktop
     displaylink
     config.boot.kernelPackages.nvidiaPackages.stable
+    jetbrains-mono
   ];
 
   stylix = {

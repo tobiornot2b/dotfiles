@@ -62,6 +62,7 @@
         "SUPER,RETURN,exec,ghostty"
         "SUPER,Q,killactive"
         "SUPER,W,exec,firefox"
+        "SUPER,P,exec,rofi -show drun"
         "SUPER,ESCAPE,exec,hyprlock"
         "SUPER,E,exec,ghostty -e yazi"
         "SUPER SHIFT,h,movewindow,l"
@@ -120,6 +121,10 @@
   
     extraConfig = "
         monitor=eDP-1,1920x1200@60,0x0,1
+        monitor=DVI-I-1,2560x1440@60,1920x0,1
+        monitor=DVI-I-2,2560x1440@60,4480x0,1
+        monitor=DVI-I-3,2560x1440@60,1920x0,1
+        monitor=DVI-I-4,2560x1440@60,4480x0,1
     ";
   };
 }
