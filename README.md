@@ -80,6 +80,10 @@ In order to install the DisplayLink drivers, you must first
    > mv $PWD/"DisplayLink USB Graphics Software for Ubuntu6.1-EXE.zip" $PWD/displaylink-610.zip
    > nix-prefetch-url file://$PWD/displaylink-600.zip
 
+## TODOs
+
+- Install [spotify](https://nixos.wiki/wiki/Spotify)
+
 ## References
 
 - [NixOS Flake Book](https://nixos-and-flakes.thiscute.world/)
