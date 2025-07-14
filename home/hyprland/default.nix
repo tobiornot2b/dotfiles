@@ -107,6 +107,7 @@
         "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
         "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
         "SDL_VIDEODRIVER, x11"
+	"ELECTRON_OZONE_PLATFORM_HINT,auto"
         "MOZ_ENABLE_WAYLAND, 1"
         "GDK_SCALE,1"
         "QT_SCALE_FACTOR,1"
@@ -115,6 +116,25 @@
   
       animations = {
         enabled = false;
+      };
+
+      ecosystem = {
+        no_donation_nag = true;
+        no_update_news = false;
+      };
+
+      cursor = {
+        sync_gsettings_theme = true;
+        no_hardware_cursors = 2; # change to 1 if want to disable
+        enable_hyprcursor = false;
+        warp_on_change_workspace = 2;
+        no_warps = true;
+      };
+
+      render = {
+        explicit_sync = 1; # Change to 1 to disable
+        explicit_sync_kms = 1;
+        direct_scanout = 0;
       };
   
     };
