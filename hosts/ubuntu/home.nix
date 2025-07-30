@@ -4,6 +4,10 @@
     ../../home/neovim/default.nix
   ];
 
+  home.packages = with pkgs; [
+    kind
+  ];
+
   home.username = "dwp7953";
   home.homeDirectory = "/home/dwp7953";
   home.stateVersion = "23.11";

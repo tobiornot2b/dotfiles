@@ -10,7 +10,7 @@
     disko.url = "github:nix-community/disko";
   };
 
-  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, disko, ... }@inputs:
     let 
       lib = nixpkgs.lib.extend (self: _: {my = import ./lib {lib = self;};});
       system = "x86_64-linux";
