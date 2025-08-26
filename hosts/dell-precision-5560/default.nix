@@ -9,6 +9,7 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_6_12;
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -55,7 +56,8 @@
     mononoki
   ];
 
-  services.xserver.videoDrivers = [ "displaylink" "modesetting" "nvidia" ];
+  # displaylink temp not added
+  services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
   hardware.nvidia = {
     # Multi graphics
     prime = {
@@ -137,7 +139,9 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
-    git  
+    git
+    zip
+    unzip
     hyprland
     kitty
     rofi-wayland
@@ -149,9 +153,12 @@
     code-cursor
     docker-compose
     telegram-desktop
-    displaylink
+    # displaylink
     config.boot.kernelPackages.nvidiaPackages.stable
-    jetbrains-mono
+    jetbrains-mono # move to fonts package possible?
+    dbeaver-bin
+    grimblast
+    jetbrains.idea-ultimate
   ];
 
   stylix = {

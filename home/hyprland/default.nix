@@ -65,6 +65,7 @@
         "SUPER,P,exec,rofi -show drun"
         "SUPER,ESCAPE,exec,hyprlock"
         "SUPER,E,exec,ghostty -e yazi"
+        "SUPER SHIFT, s, exec, grimblast save area"
         "SUPER SHIFT,h,movewindow,l"
         "SUPER SHIFT,l,movewindow,r"
         "SUPER SHIFT,k,movewindow,u"
