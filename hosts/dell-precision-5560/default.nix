@@ -153,12 +153,13 @@
     code-cursor
     docker-compose
     telegram-desktop
-    # displaylink
+    # displaylink does not work with current kernel
     config.boot.kernelPackages.nvidiaPackages.stable
     jetbrains-mono # move to fonts package possible?
     dbeaver-bin
     grimblast
     jetbrains.idea-ultimate
+    nodePackages.nodejs
   ];
 
   stylix = {

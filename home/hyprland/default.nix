@@ -74,6 +74,11 @@
         "SUPER,l,movefocus,r"
         "SUPER,k,movefocus,u"
         "SUPER,j,movefocus,d"
+        "SUPER,F,togglefloating"
+        "SUPER ALT,h,resizeactive,-80 0"
+        "SUPER ALT,l,resizeactive,80 0"
+        "SUPER ALT,k,resizeactive,0 -80"
+        "SUPER ALT,j,resizeactive,0 80"
         "SUPER,1,workspace,1"
         "SUPER,2,workspace,2"
         "SUPER,3,workspace,3"
@@ -133,8 +138,9 @@
       };
 
       render = {
-        explicit_sync = 1; # Change to 1 to disable
-        explicit_sync_kms = 1;
+        # both options are not supported anymore
+        # explicit_sync = 1; # Change to 1 to disable
+        # explicit_sync_kms = 1;
         direct_scanout = 0;
       };
   
@@ -146,6 +152,8 @@
         monitor=DVI-I-2,2560x1440@60,4480x0,1
         monitor=DVI-I-3,2560x1440@60,1920x0,1
         monitor=DVI-I-4,2560x1440@60,4480x0,1
+        monitor=DP-5,2560x1440@60,1920x0,1
+        monitor=DP-6,1920x1200@60,4480x0,1,transform,1
     ";
   };
 }
