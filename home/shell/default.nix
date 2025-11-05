@@ -6,7 +6,7 @@
   ];
 
   programs.bash = {
-    enable = true;
+    enable = false;
     shellAliases = {
       ll = "ls -l";
       ".." = "cd ..";
@@ -15,6 +15,9 @@
 
   programs.zsh = {
     enable = true;
+    oh-my-zsh = {
+      enable = true;
+    };
     shellAliases = {
       ll = "ls -l";
       ".." = "cd ..";
