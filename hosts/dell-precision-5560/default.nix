@@ -144,7 +144,7 @@
     unzip
     hyprland
     kitty
-    rofi-wayland
+    rofi
     waybar
     mako
     arandr
@@ -163,7 +163,7 @@
   ];
 
   stylix = {
-    enable = true;
+    enable = false;
     image = ../../wallpapers/background.jpg;
     #base16Scheme = {
     #  base00 = "282936";
