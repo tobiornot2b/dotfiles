@@ -59,12 +59,12 @@
       };
 
       bind = [
-        "SUPER,RETURN,exec,ghostty"
+        "SUPER,RETURN,exec,alacritty"
         "SUPER,Q,killactive"
         "SUPER,W,exec,firefox"
         "SUPER,P,exec,rofi -show drun"
         "SUPER,ESCAPE,exec,hyprlock"
-        "SUPER,E,exec,ghostty -e yazi"
+        "SUPER,E,exec,alacritty -e yazi"
         "SUPER SHIFT, s, exec, grimblast save area"
         "SUPER SHIFT,h,movewindow,l"
         "SUPER SHIFT,l,movewindow,r"
