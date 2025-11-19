@@ -56,6 +56,11 @@
     mononoki
   ];
 
+  # shells
+  environment.shells = with pkgs; [ zsh ];
+  users.defaultUserShell = pkgs.zsh;
+  programs.zsh.enable = true;
+
   # bluetooth
   hardware.bluetooth = {
     enable = true;
