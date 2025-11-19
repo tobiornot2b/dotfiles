@@ -14,6 +14,7 @@
     nodejs_20
     clipcat # clipboard manager
     dunst
+    logseq
   ];
 
   home.username = "dwp7953";
