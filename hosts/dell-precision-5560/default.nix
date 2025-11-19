@@ -167,6 +167,7 @@
     jetbrains.idea-ultimate
     nodePackages.nodejs
     logseq
+    pulsemixer
   ];
 
   stylix = {
