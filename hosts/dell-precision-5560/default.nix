@@ -56,8 +56,14 @@
     mononoki
   ];
 
+  # bluetooth
+  hardware.bluetooth = {
+    enable = true;
+  };
+  services.blueman.enable = true;
+
   # displaylink temp not added
-  services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
+  services.xserver.videoDrivers = [ "modesetting" "nvidia" "displaylink" ];
   hardware.nvidia = {
     # Multi graphics
     prime = {
@@ -153,13 +159,14 @@
     code-cursor
     docker-compose
     telegram-desktop
-    # displaylink does not work with current kernel
+    displaylink # does not work with current kernel
     config.boot.kernelPackages.nvidiaPackages.stable
     jetbrains-mono # move to fonts package possible?
     dbeaver-bin
     grimblast
     jetbrains.idea-ultimate
     nodePackages.nodejs
+    logseq
   ];
 
   stylix = {
