@@ -9,6 +9,7 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_6_12;
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -34,12 +35,17 @@
     LC_TIME = "de_DE.UTF-8";
   };
 
+  # UDEV for changing monitors
+  services.udev.extraRules = ''
+    SUBSYSTEM=="drm", ACTION=="change", RUN+="${pkgs.writeShellScriptBin "udev_hypr_monitor" (builtins.readFile ../../modules/udev/monitors-reconfigure.sh)}"
+  '';
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
   # GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   programs.hyprland.enable = true;
 
@@ -50,7 +56,14 @@
     mononoki
   ];
 
-  services.xserver.videoDrivers = [ "nvidia" ];
+  # bluetooth
+  hardware.bluetooth = {
+    enable = true;
+  };
+  services.blueman.enable = true;
+
+  # displaylink temp not added
+  services.xserver.videoDrivers = [ "modesetting" "nvidia" "displaylink" ];
   hardware.nvidia = {
     # Multi graphics
     prime = {
@@ -91,8 +104,10 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
+  security.polkit.enable = true;
+  security.pam.services.hyprlock = {};
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -101,11 +116,13 @@
     jack.enable = true;
   };
 
+  virtualisation.docker.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.tobi = {
     isNormalUser = true;
     description = "Tobias";
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" "video" "docker" ];
     packages = with pkgs; [];
     hashedPasswordFile = config.age.secrets.secret1.path;
   };
@@ -128,16 +145,75 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
-    git  
+    git
+    zip
+    unzip
     hyprland
     kitty
-    rofi-wayland
+    rofi
     waybar
     mako
+    arandr
     nwg-look
     swww
+    code-cursor
+    docker-compose
+    telegram-desktop
+    displaylink # does not work with current kernel
     config.boot.kernelPackages.nvidiaPackages.stable
+    jetbrains-mono # move to fonts package possible?
+    dbeaver-bin
+    grimblast
+    jetbrains.idea-ultimate
+    nodePackages.nodejs
+    logseq
+    pulsemixer
   ];
+
+  stylix = {
+    enable = false;
+    image = ../../wallpapers/background.jpg;
+    #base16Scheme = {
+    #  base00 = "282936";
+    #  base01 = "3a3c4e";
+    #  base02 = "4d4f68";
+    #  base03 = "626483";
+    #  base04 = "62d6e8";
+    #  base05 = "e9e9f4";
+    #  base06 = "f1f2f8";
+    #  base07 = "f7f7fb";
+    #  base08 = "ea51b2";
+    #  base09 = "b45bcf";
+    #  base0A = "00f769";
+    #  base0B = "ebff87";
+    #  base0C = "a1efe4";
+    #  base0D = "62d6e8";
+    #  base0E = "b45bcf";
+    #  base0F = "00f769";
+    #};
+    polarity = "dark";
+    opacity.terminal = 1.0;
+    fonts = {
+      monospace = {
+        package = pkgs.nerd-fonts.jetbrains-mono;
+        name = "JetBrains Mono";
+      };
+      sansSerif = {
+        package = pkgs.montserrat;
+        name = "Montserrat";
+      };
+      serif = {
+        package = pkgs.montserrat;
+        name = "Montserrat";
+      };
+      sizes = {
+        applications = 12;
+        terminal = 15;
+        desktop = 11;
+        popups = 12;
+      };
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -11,7 +11,11 @@
 
   programs.git = {
     enable = true;
-    userName = "tobiornot2b";
-    userEmail = "pgpg.toby@gmail.com";
+    settings = {
+      user = {
+        name = "tobiornot2b";
+        email = "pgpg.toby@gmail.com";
+      };
+    };
   };
 }
