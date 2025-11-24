@@ -22,9 +22,15 @@
   home.stateVersion = "23.11";
 
   programs.git = {
-    userName = "Tobias Maede";
-    userEmail = "tobias.maede.ext@dwpbank.de";
+    enable = true;
+    settings = {
+      user = {
+        name = "Tobias Maede";
+        email = "tobias.maede.ext@dwpbank.de";
+      };
+    };
   };
+
 
   ## Clipcat Config
   home.file.".config/clipcat/clipcatd.toml" = {
