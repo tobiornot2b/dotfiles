@@ -1,6 +1,7 @@
-{pkgs, ...}: {
+{pkgs, config, ...}: {
   imports = [
     ../../home/core.nix
+    ../../home/spotify.nix
     ../../home/rofi/default.nix
     ../../home/shell/default.nix
     ../../home/neovim/default.nix
@@ -46,4 +47,9 @@
   home.file.".config/xmobar/xmobarrc" = {
     source = ../../modules/xmonad/xmobarrc;
   };
+
+
+  # Create a symlink so the files can be changed without running home-manager again
+  # Path needs to be absolute to be working
+  home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/home/dwp7953/.dotfiles/config/nvim";
 }
