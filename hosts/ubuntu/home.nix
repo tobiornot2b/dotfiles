@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ../../home/core.nix
+    ../../home/rofi/default.nix
     ../../home/shell/default.nix
     ../../home/neovim/default.nix
   ];

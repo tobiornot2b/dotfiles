@@ -68,7 +68,7 @@ myKeys =
         --- Other
        , ("M-<Tab>", sendMessage NextLayout)           -- Switch to next layout
        , ("M-a", namedScratchpadAction myScratchpads "ExxetaAI")
-       , ("M-o", namedScratchpadAction myScratchpads "Obsidian")
+       , ("M-o", namedScratchpadAction myScratchpads "Logseq")
        , ("M-z", namedScratchpadAction myScratchpads "Zoom")
        , ("M-d", namedScratchpadAction myScratchpads "DrawIO")
        ]
@@ -77,7 +77,7 @@ myKeys =
 myScratchpads :: [NamedScratchpad]
 myScratchpads =
   [ NS "ExxetaAI" "google-chrome --app=http://chat.exxeta.com --profile-directory='Default'" (resource =? "chat.exxeta.com") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
-  , NS "Obsidian" "flatpak run md.obsidian.Obsidian" (className =? "obsidian") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+  , NS "Logseq" "logseq --no-sandbox" (className =? "logseq") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   , NS "Zoom" "flatpak run us.zoom.Zoom" (className =? "zoom") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   , NS "DrawIO" "google-chrome --app=https://app.diagrams.net --profile-directory='Default'" (resource =? "app.diagrams.net") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
   ]
@@ -122,7 +122,7 @@ myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
 myManageHook = composeAll
     [ resource =? "chat.exxeta.com" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , resource =? "app.diagrams.net" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
-    , className =? "obsidian" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    , className =? "logseq" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , isDialog --> doFloat
     ]
 
