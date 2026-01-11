@@ -11,7 +11,7 @@
     kind
     picom # needed compositor for xmonad
     dbeaver-bin
-    jetbrains.idea-ultimate
+    jetbrains.idea
     maim # screenshot utility
     nodejs_20
     clipcat # clipboard manager

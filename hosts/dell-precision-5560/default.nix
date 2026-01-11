@@ -177,7 +177,7 @@
     jetbrains-mono # move to fonts package possible?
     dbeaver-bin
     grimblast
-    jetbrains.idea-ultimate
+    jetbrains.idea
     nodePackages.nodejs
     logseq
     pulsemixer

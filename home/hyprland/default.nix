@@ -104,7 +104,7 @@
       ];
 
       windowrule = [
-	"float, class:(Logseq)"
+	"float on, match:class (Logseq)"
       ];
 
       env = [
