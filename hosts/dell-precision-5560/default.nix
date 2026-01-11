@@ -53,6 +53,11 @@
   fonts.packages = with pkgs; [
     font-awesome
     fira-code
+    fira-code-symbols
+    noto-fonts
+    material-icons
+    symbola
+    powerline-fonts
     mononoki
   ];
 
@@ -69,6 +74,8 @@
 
   # displaylink temp not added
   services.xserver.videoDrivers = [ "modesetting" "nvidia" "displaylink" ];
+  hardware.graphics.enable = true;
+
   hardware.nvidia = {
     # Multi graphics
     prime = {
@@ -160,6 +167,7 @@
     mako
     arandr
     nwg-look
+    killall # killing all instances of a program
     swww
     code-cursor
     docker-compose

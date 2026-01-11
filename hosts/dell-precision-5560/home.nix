@@ -9,6 +9,14 @@
 
   programs.home-manager.enable = true;
 
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    matchBlocks."*" = {
+      addKeysToAgent = "yes";
+    };
+  };
+
   programs.git = {
     enable = true;
     settings = {

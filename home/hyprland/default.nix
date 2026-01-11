@@ -48,9 +48,10 @@
     };
     settings = {
       exec-once = [
-        "waybar"
-    	"swww-daemon"
-        "swww img /home/tobi/Downloads/background.jpg"     
+        "killall -q waybar;sleep .5 && waybar"
+        "killall -q swww;sleep .5 && swww-daemon"
+        "pypr &"
+        "sleep 1.0 && swww img /home/tobi/Downloads/background.jpg"
       ];
 
       input = {
@@ -61,6 +62,7 @@
       bind = [
         "SUPER,RETURN,exec,alacritty"
         "SUPER,Q,killactive"
+        "SUPER,O,exec,pypr toggle logseq"
         "SUPER,W,exec,firefox"
         "SUPER,P,exec,rofi -show drun"
         "SUPER,ESCAPE,exec,hyprlock"
@@ -100,6 +102,11 @@
         "SUPER  SHIFT,9,movetoworkspace,9"
         "SUPER  SHIFT,0,movetoworkspace,10"
       ];
+
+      windowrule = [
+	"float, class:(Logseq)"
+      ];
+
       env = [
         "NIXOS_OZONE_WL, 1"
         "WLR_DRM_DEVICES,/dev/dri/card1" # use Intel Graphics
@@ -152,7 +159,8 @@
         monitor=DVI-I-2,2560x1440@60,4480x0,1
         monitor=DVI-I-3,2560x1440@60,1920x0,1
         monitor=DVI-I-4,2560x1440@60,4480x0,1
-        monitor=DP-5,2560x1440@60,1920x0,1
+        monitor=DP-4,2560x1440@60,1920x0,1
+        monitor=DP-5,1920x1200@60,4480x0,1,transform,1
         monitor=DP-6,1920x1200@60,4480x0,1,transform,1
     ";
   };
