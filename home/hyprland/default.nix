@@ -72,11 +72,12 @@
         "SUPER SHIFT,l,movewindow,r"
         "SUPER SHIFT,k,movewindow,u"
         "SUPER SHIFT,j,movewindow,d"
+	"SUPER,F,fullscreen,"
+        "SUPER SHIFT,F,togglefloating,"
         "SUPER,h,movefocus,l"
         "SUPER,l,movefocus,r"
         "SUPER,k,movefocus,u"
         "SUPER,j,movefocus,d"
-        "SUPER,F,togglefloating"
         "SUPER ALT,h,resizeactive,-80 0"
         "SUPER ALT,l,resizeactive,80 0"
         "SUPER ALT,k,resizeactive,0 -80"
@@ -105,7 +106,14 @@
 
       windowrule = [
 	"float on, match:class (Logseq)"
+	"no_initial_focus on, match:class (jetbrains-)(.*)" # important for hover effects in intellij
       ];
+
+      bindm = [
+        "SUPER, mouse:272, movewindow"
+        "SUPER, mouse:273, resizewindow"
+      ];
+
 
       env = [
         "NIXOS_OZONE_WL, 1"
@@ -135,6 +143,24 @@
         no_donation_nag = true;
         no_update_news = false;
       };
+
+      decoration = {
+        rounding = 10;
+        blur = {
+          enabled = true;
+          size = 5;
+          passes = 3;
+          ignore_opacity = false;
+          new_optimizations = true;
+        };
+        shadow = {
+          enabled = true;
+          range = 4;
+          render_power = 3;
+          color = "rgba(1a1a1aee)";
+        };
+      };
+
 
       cursor = {
         sync_gsettings_theme = true;
