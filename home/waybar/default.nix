@@ -1,7 +1,7 @@
 { config, pkgs, ...}:
 {
   programs.waybar = {
-    enable = true;
+    enable = false;
     settings = {
       mainBar = {
         layer = "top";

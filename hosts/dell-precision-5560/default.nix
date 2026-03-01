@@ -11,6 +11,11 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_6_12;
 
+
+  # Systemd
+  systemd.targets.sleep.enable = true;
+  systemd.targets.suspend.enable = true;
+
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -72,8 +77,9 @@
   };
   services.blueman.enable = true;
 
-  # displaylink temp not added
-  services.xserver.videoDrivers = [ "modesetting" "nvidia" "displaylink" ];
+  # displaylink current regression
+  # https://github.com/nixos/nixpkgs/issues/491861
+  services.xserver.videoDrivers = [ "modesetting" "nvidia"  ]; 
   hardware.graphics.enable = true;
 
   hardware.nvidia = {
@@ -174,7 +180,7 @@
     telegram-desktop
     displaylink # does not work with current kernel
     config.boot.kernelPackages.nvidiaPackages.stable
-    jetbrains-mono # move to fonts package possible?
+		# jetbrains-mono # move to fonts package possible?
     dbeaver-bin
     grimblast
     jetbrains.idea
