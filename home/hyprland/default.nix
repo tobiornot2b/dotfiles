@@ -188,6 +188,7 @@
         monitor=DP-4,2560x1440@60,1920x0,1
         monitor=DP-5,1920x1200@60,4480x0,1,transform,1
         monitor=DP-6,1920x1200@60,4480x0,1,transform,1
+        monitor=DP-7,2560x1440@60,1920x0,1
     ";
   };
 }
