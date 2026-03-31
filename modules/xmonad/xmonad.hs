@@ -3,6 +3,7 @@ import XMonad
        -- Layout Modifieres
 import XMonad.Layout.Spacing
 import XMonad.Layout.LayoutModifier
+import XMonad.Layout.ToggleLayouts
 
        -- Hooks
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
@@ -38,7 +39,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 myBorderWidth :: Dimension
-myBorderWidth = 1
+myBorderWidth = 2
 
 myWorkspaces = ["dev", "web", "test", "tel", "chat"] ++ map show [6..9]
 
@@ -61,8 +62,8 @@ myKeys =
        , ("M-<Return>", spawn myTerminal)
        , ("M-w", spawn myBrowser)
        , ("M-e", spawn "ranger")
-       , ("M-<Esc>", spawn "i3lock -t -i /home/dwp7953/Downloads/florian1.png")
-        --- Programs
+       , ("M-<Esc>", spawn "i3lock -t -i /home/dwp7953/Downloads/koala.jpg")
+        --- Navigation
        , ("M-,", nextScreen)
        , ("M-.", prevScreen)
         --- Other
@@ -71,13 +72,14 @@ myKeys =
        , ("M-o", namedScratchpadAction myScratchpads "Logseq")
        , ("M-z", namedScratchpadAction myScratchpads "Zoom")
        , ("M-d", namedScratchpadAction myScratchpads "DrawIO")
+       , ("M-f", sendMessage (Toggle "Full"))         -- Umschalten in den Vollbildmodus
        ]
 
 --- Scrachpad Definition
 myScratchpads :: [NamedScratchpad]
 myScratchpads =
   [ NS "ExxetaAI" "google-chrome --app=http://chat.exxeta.com --profile-directory='Default'" (resource =? "chat.exxeta.com") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
-  , NS "Logseq" "logseq --no-sandbox" (className =? "logseq") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+  , NS "Logseq" "logseq --no-sandbox" (className =? "Logseq") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "Zoom" "flatpak run us.zoom.Zoom" (className =? "zoom") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   , NS "DrawIO" "google-chrome --app=https://app.diagrams.net --profile-directory='Default'" (resource =? "app.diagrams.net") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
   ]
@@ -102,6 +104,7 @@ mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
 -- -- The available layouts.  Note that each layout is separated by |||,
 -- -- which denotes layout choice.
 -- --
+-- myLayout = toggleLayouts Full (Tall 1 (3/100) (1/2))
 myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
   where
     -- default tiling algorithm partitions the screen into two panes
@@ -122,7 +125,7 @@ myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
 myManageHook = composeAll
     [ resource =? "chat.exxeta.com" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , resource =? "app.diagrams.net" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
-    , className =? "logseq" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    , className =? "Logseq" --> (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
     , isDialog --> doFloat
     ]
 
@@ -135,8 +138,8 @@ myMouseBindings (XConfig {XMonad.modMask = mod4Mask}) = M.fromList $
 myStartupHook :: X ()
 myStartupHook = do
   spawnOnce "dunst &"
+  spawnOnce "picom --config ~/.config/picom/picom.conf &"
   spawnOnce "clipcatd"
-  spawnOnce "picom --backend xrender &"
 
 main = do
   xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.dotfiles/modules/xmonad/xmobarrc")
@@ -148,6 +151,8 @@ defaults xmproc xmproc1 xmproc2 = def
      { terminal = myTerminal
      , modMask  = myModMask
      , borderWidth = myBorderWidth
+     , normalBorderColor = "#3b4252"
+     , focusedBorderColor = "#81a1c1"
      , workspaces = myWorkspaces
      , mouseBindings = myMouseBindings
      , manageHook = myManageHook <+> manageHook def

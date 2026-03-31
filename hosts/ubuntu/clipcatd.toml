@@ -2,7 +2,7 @@
 daemonize = true
 
 # Maximum number of clips in history.
-max_history = 50
+max_history = 5000
 
 # File path for clip history.
 # If this value is omitted, `clipcatd` will persist history in `$XDG_CACHE_HOME/clipcat/clipcatd-history`.
@@ -32,13 +32,14 @@ emit_stdout = false
 emit_stderr = false
 
 # Log level.
-level = "INFO"
+level = "DEBUG"
 
 [watcher]
+# When activated it will copy all the times every selection iteration into the clipboard
 # Enable watching the X11/Wayland clipboard selection.
 enable_clipboard = true
 # Enable watching the X11/Wayland primary selection.
-enable_primary = true
+enable_primary = false
 
 # Ignore clips that match any of the MIME types.
 sensitive_mime_types = ["x-kde-passwordManagerHint"]

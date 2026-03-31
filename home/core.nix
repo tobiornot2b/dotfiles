@@ -5,6 +5,8 @@
 
   programs.fzf.enable = true;
 
+  programs.fd.enable = true;
+
   programs.ripgrep.enable = true;
 
   programs.lazygit.enable = true;

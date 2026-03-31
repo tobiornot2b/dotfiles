@@ -1,6 +1,7 @@
 {pkgs, config, ...}: {
   imports = [
     ../../home/core.nix
+    ../../home/chromium.nix
     ../../home/spotify.nix
     ../../home/rofi/default.nix
     ../../home/shell/default.nix
@@ -13,10 +14,11 @@
     dbeaver-bin
     jetbrains.idea
     maim # screenshot utility
-    nodejs_20
+    nodejs_22
     clipcat # clipboard manager
     dunst
     logseq
+    bruno
   ];
 
   home.username = "dwp7953";
