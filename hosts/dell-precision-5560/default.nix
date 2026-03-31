@@ -79,7 +79,7 @@
 
   # displaylink current regression
   # https://github.com/nixos/nixpkgs/issues/491861
-  services.xserver.videoDrivers = [ "modesetting" "nvidia" ]; 
+  services.xserver.videoDrivers = [ "modesetting" "nvidia" "displaylink" ]; 
   hardware.graphics.enable = true;
 
   hardware.nvidia = {

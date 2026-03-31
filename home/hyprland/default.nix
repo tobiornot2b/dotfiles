@@ -181,13 +181,12 @@
   
     extraConfig = "
         monitor=eDP-1,1920x1200@60,0x0,1
-        monitor=DVI-I-1,2560x1440@60,1920x0,1
-        monitor=DVI-I-2,2560x1440@60,4480x0,1
+        monitor=DVI-I-1,2560x1440@60,4480x0,1
+        monitor=DVI-I-2,2560x1440@60,1920x0,1
         monitor=DVI-I-3,2560x1440@60,1920x0,1
         monitor=DVI-I-4,2560x1440@60,4480x0,1
-        monitor=DP-4,2560x1440@60,1920x0,1
-        monitor=DP-5,1920x1200@60,4480x0,1,transform,1
-        monitor=DP-6,1920x1200@60,4480x0,1,transform,1
+        monitor=DP-5,2560x1440@60,1920x0,1
+        monitor=DP-4,1920x1200@60,4480x0,1,transform,1
         monitor=DP-7,2560x1440@60,1920x0,1
     ";
   };
