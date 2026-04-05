@@ -27,6 +27,10 @@
     };
   };
 
+  services.syncthing = {
+    enable = true;
+  };
+
   # Create a symlink so the files can be changed without running home-manager again
   # Path needs to be absolute to be working
   home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/home/tobi/.dotfiles/config/nvim";
