@@ -51,6 +51,8 @@
     shellAliases = {
       ll = "ls -l";
       ".." = "cd ..";
+      "mvnis" = "mvn install -DskipTests -q -T 3C";
+      "mvncis" = "mvn clean install -DskipTests -q -T 3C";
     };
   };
 }

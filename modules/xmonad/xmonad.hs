@@ -61,7 +61,7 @@ myKeys =
         --- Programs
        , ("M-<Return>", spawn myTerminal)
        , ("M-w", spawn myBrowser)
-       , ("M-e", spawn "ranger")
+       , ("M-e", spawn (myTerminal ++ " -e yazi"))
        , ("M-<Esc>", spawn "i3lock -t -i /home/dwp7953/Downloads/koala.jpg")
         --- Navigation
        , ("M-,", nextScreen)

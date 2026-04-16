@@ -14,11 +14,13 @@
     dbeaver-bin
     jetbrains.idea
     maim # screenshot utility
-    nodejs_22
+    nodejs_24
     clipcat # clipboard manager
     dunst
     logseq
     bruno
+    syncthing
+    keymapp
   ];
 
   home.username = "dwp7953";
