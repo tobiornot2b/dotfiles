@@ -51,6 +51,8 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 myKeys :: [(String, X ())]
 myKeys = 
        [ ("M-C-r", spawn "xmonad --recompile")
+       , ("M-S-c", spawn "xmonad --recompile && xmonad --restart") -- Neustarten
+       , ("M-q", kill)                                              -- Fenster schließen
        --- Rofi
        , ("M-p", spawn "rofi -show drun")
        , ("M-c", spawn "clipcat-menu")
@@ -105,7 +107,7 @@ mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
 -- -- which denotes layout choice.
 -- --
 -- myLayout = toggleLayouts Full (Tall 1 (3/100) (1/2))
-myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
+myLayout = avoidStruts $ toggleLayouts Full (tiled ||| Mirror tiled ||| Full)
   where
     -- default tiling algorithm partitions the screen into two panes
     tiled   = mySpacing 4 $ Tall nmaster delta ratio
@@ -156,6 +158,7 @@ defaults xmproc xmproc1 xmproc2 = def
      , workspaces = myWorkspaces
      , mouseBindings = myMouseBindings
      , manageHook = myManageHook <+> manageHook def
+     , keys = \c -> M.delete (myModMask, xK_q) $ M.delete (myModMask .|. shiftMask, xK_c) $ keys def c
      , layoutHook = myLayout
      , startupHook = myStartupHook
      , logHook  = myLogHook <+> dynamicLogWithPP xmobarPP

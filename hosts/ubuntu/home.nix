@@ -20,7 +20,6 @@
     logseq
     bruno
     syncthing
-    keymapp
   ];
 
   home.username = "dwp7953";
