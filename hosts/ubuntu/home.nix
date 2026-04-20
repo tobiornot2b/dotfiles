@@ -1,4 +1,23 @@
-{pkgs, config, ...}: {
+{pkgs, config, ...}: 
+
+let
+  wg-toggle = pkgs.writeShellScriptBin "wg-toggle" ''
+    INTERFACE="wg0"
+    if sudo wg show "$INTERFACE" &>/dev/null; then
+      sudo wg-quick down "$INTERFACE"
+    else
+      sudo wg-quick up "$INTERFACE"
+    fi
+  '';
+  wg-status = pkgs.writeShellScriptBin "wg-status" ''
+    if sudo wg show wg0 &>/dev/null; then
+      echo "<fc=#98be65><fn=1>$(printf '\uf132')</fn></fc>"
+    else
+      echo "<fc=#ff6c6b><fn=1>$(printf '\uf132')</fn></fc>"
+    fi
+  '';
+in
+{
   imports = [
     ../../home/core.nix
     ../../home/chromium.nix
@@ -9,6 +28,8 @@
   ];
 
   home.packages = with pkgs; [
+    wg-toggle
+    wg-status
     kind
     picom # needed compositor for xmonad
     dbeaver-bin

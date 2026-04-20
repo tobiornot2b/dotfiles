@@ -75,6 +75,9 @@ myKeys =
        , ("M-z", namedScratchpadAction myScratchpads "Zoom")
        , ("M-d", namedScratchpadAction myScratchpads "DrawIO")
        , ("M-f", sendMessage (Toggle "Full"))         -- Umschalten in den Vollbildmodus
+       -- Funktioniert nur, wenn die entsprechende Befehle auch ohne password eingabe funktionieren (USERNAME mit Nutzernamen ersetzen)
+       -- echo "USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick up wg0, /usr/bin/wg-quick down wg0, /usr/bin/wg show wg0" | sudo tee /etc/sudoers.d/wg-toggle && sudo chmod 440 /etc/sudoers.d/wg-toggle
+       , ("M-v", spawn "wg-toggle")                  -- VPN Toggle (wg0)
        ]
 
 --- Scrachpad Definition
