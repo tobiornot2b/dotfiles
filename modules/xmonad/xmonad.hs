@@ -74,6 +74,9 @@ myKeys =
        , ("M-o", namedScratchpadAction myScratchpads "Logseq")
        , ("M-z", namedScratchpadAction myScratchpads "Zoom")
        , ("M-d", namedScratchpadAction myScratchpads "DrawIO")
+       , ("M-S-t", namedScratchpadAction myScratchpads "Teams")
+       , ("M-n", namedScratchpadAction myScratchpads "Numbat")
+       , ("M-x", spawn (myTerminal ++ " -e sh -c 'xprop | less'"))
        , ("M-f", sendMessage (Toggle "Full"))         -- Umschalten in den Vollbildmodus
        -- Funktioniert nur, wenn die entsprechende Befehle auch ohne password eingabe funktionieren (USERNAME mit Nutzernamen ersetzen)
        -- echo "USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick up wg0, /usr/bin/wg-quick down wg0, /usr/bin/wg show wg0" | sudo tee /etc/sudoers.d/wg-toggle && sudo chmod 440 /etc/sudoers.d/wg-toggle
@@ -88,6 +91,8 @@ myScratchpads =
   , NS "Logseq" "logseq --no-sandbox" (className =? "Logseq") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "Zoom" "flatpak run us.zoom.Zoom" (className =? "zoom") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   , NS "DrawIO" "google-chrome --app=https://app.diagrams.net --profile-directory='Default'" (resource =? "app.diagrams.net") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
+  , NS "Teams" "google-chrome --app=https://teams.microsoft.com/v2/ --profile-directory='Default'" (resource =? "teams.microsoft.com__v2") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
+  , NS "Numbat" "alacritty --class numbat -e numbat" (resource =? "numbat") (customFloating $ W.RationalRect (1/4) (1/4) (1/2) (1/2))
   ]
 
 -- Status bars and logging
@@ -162,7 +167,7 @@ defaults xmproc xmproc1 xmproc2 = def
      , focusedBorderColor = "#81a1c1"
      , workspaces = myWorkspaces
      , mouseBindings = myMouseBindings
-     , manageHook = myManageHook <+> manageHook def
+     , manageHook = myManageHook <+> namedScratchpadManageHook myScratchpads <+> manageHook def
      , keys = \c -> M.delete (myModMask, xK_q) $ M.delete (myModMask .|. shiftMask, xK_c) $ keys def c
      , layoutHook = myLayout
      , startupHook = myStartupHook

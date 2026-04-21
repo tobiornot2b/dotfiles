@@ -23,4 +23,6 @@
   programs.zathura.enable = true;
 
   programs.k9s.enable = true;
+
+  programs.numbat.enable = true;
 }
