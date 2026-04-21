@@ -16,6 +16,22 @@ let
       echo "<fc=#ff6c6b><fn=1>$(printf '\uf132')</fn></fc>"
     fi
   '';
+  kb-toggle = pkgs.writeShellScriptBin "kb-toggle" ''
+    VARIANT=$(setxkbmap -query | awk '/variant/{print $2}')
+    if [ "$VARIANT" = "intl" ]; then
+      setxkbmap us
+    else
+      setxkbmap us -variant intl
+    fi
+  '';
+  kb-status = pkgs.writeShellScriptBin "kb-status" ''
+    VARIANT=$(setxkbmap -query | awk '/variant/{print $2}')
+    if [ "$VARIANT" = "intl" ]; then
+      echo "<fc=#82AAFF>US-intl</fc>"
+    else
+      echo "<fc=#c792ea>US</fc>"
+    fi
+  '';
 in
 {
   imports = [
@@ -30,6 +46,8 @@ in
   home.packages = with pkgs; [
     wg-toggle
     wg-status
+    kb-toggle
+    kb-status
     kind
     picom # needed compositor for xmonad
     dbeaver-bin

@@ -78,6 +78,7 @@ myKeys =
        -- Funktioniert nur, wenn die entsprechende Befehle auch ohne password eingabe funktionieren (USERNAME mit Nutzernamen ersetzen)
        -- echo "USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick up wg0, /usr/bin/wg-quick down wg0, /usr/bin/wg show wg0" | sudo tee /etc/sudoers.d/wg-toggle && sudo chmod 440 /etc/sudoers.d/wg-toggle
        , ("M-v", spawn "wg-toggle")                  -- VPN Toggle (wg0)
+       , ("M-s", spawn "kb-toggle")                  -- Keyboard layout toggle
        ]
 
 --- Scrachpad Definition
@@ -145,6 +146,7 @@ myStartupHook = do
   spawnOnce "dunst &"
   spawnOnce "picom --config ~/.config/picom/picom.conf &"
   spawnOnce "clipcatd"
+  spawn "setxkbmap us -variant intl"
 
 main = do
   xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.dotfiles/modules/xmonad/xmobarrc")
