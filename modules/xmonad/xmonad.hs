@@ -64,6 +64,7 @@ myKeys =
        , ("M-<Return>", spawn myTerminal)
        , ("M-w", spawn myBrowser)
        , ("M-e", spawn (myTerminal ++ " -e yazi"))
+       , ("M-S-e", spawn "nautilus")
        , ("M-<Esc>", spawn "i3lock -t -i /home/dwp7953/Downloads/koala.jpg")
         --- Navigation
        , ("M-,", nextScreen)
@@ -89,7 +90,7 @@ myScratchpads :: [NamedScratchpad]
 myScratchpads =
   [ NS "ExxetaAI" "google-chrome --app=http://chat.exxeta.com --profile-directory='Default'" (resource =? "chat.exxeta.com") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
   , NS "Logseq" "logseq --no-sandbox" (className =? "Logseq") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
-  , NS "Zoom" "flatpak run us.zoom.Zoom" (className =? "zoom") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+  , NS "Zoom" "flatpak run us.zoom.Zoom" (className =? "zoom" <&&> title =? "Meeting") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "DrawIO" "google-chrome --app=https://app.diagrams.net --profile-directory='Default'" (resource =? "app.diagrams.net") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
   , NS "Teams" "google-chrome --app=https://teams.microsoft.com/v2/ --profile-directory='Default'" (resource =? "teams.microsoft.com__v2") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "Numbat" "alacritty --class numbat -e numbat" (resource =? "numbat") (customFloating $ W.RationalRect (1/4) (1/4) (1/2) (1/2))
@@ -137,6 +138,7 @@ myManageHook = composeAll
     [ resource =? "chat.exxeta.com" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , resource =? "app.diagrams.net" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , className =? "Logseq" --> (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
+    , (className =? "zoom" <&&> title =? "Meeting") --> (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
     , isDialog --> doFloat
     ]
 
