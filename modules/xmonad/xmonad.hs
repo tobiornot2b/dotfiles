@@ -83,6 +83,7 @@ myKeys =
        -- echo "USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick up wg0, /usr/bin/wg-quick down wg0, /usr/bin/wg show wg0" | sudo tee /etc/sudoers.d/wg-toggle && sudo chmod 440 /etc/sudoers.d/wg-toggle
        , ("M-v", spawn "wg-toggle")                  -- VPN Toggle (wg0)
        , ("M-s", spawn "kb-toggle")                  -- Keyboard layout toggle
+       , ("M-S-p", spawn "posture-toggle")            -- Sitzen/Stehen toggle
        ]
 
 --- Scrachpad Definition
