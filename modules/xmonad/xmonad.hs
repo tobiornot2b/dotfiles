@@ -59,7 +59,7 @@ myKeys =
        , ("M-S-s", spawn "maim -s | xclip -selection clipboard -t image/png")
        --- Join Zoom Meeting
        --- TODO: Move to secret
-       , ("M-S-z", spawn "xdg-open 'zoommtg://dwpbank.zoom.us/join?action=join&confno=67460921564&pwd=h5L6UQQ8Ppbcf2uH0VHafmDIbhApQG.1'")
+       , ("M-S-z", spawn "xdg-open 'zoommtg://dwpbank.zoom.us/join?action=join&confno=63325169617&pwd=xn5orPbuiNpkNpE543wOcQk5sqZfkR.1'")
         --- Programs
        , ("M-<Return>", spawn myTerminal)
        , ("M-w", spawn myBrowser)
@@ -89,7 +89,7 @@ myKeys =
 --- Scrachpad Definition
 myScratchpads :: [NamedScratchpad]
 myScratchpads =
-  [ NS "ExxetaAI" "google-chrome --app=http://chat.exxeta.com --profile-directory='Default'" (resource =? "chat.exxeta.com") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
+  [ NS "ExxetaAI" "google-chrome --app=http://chat.exxeta.info --profile-directory='Default'" (resource =? "chat.exxeta.info") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
   , NS "Logseq" "logseq --no-sandbox" (className =? "Logseq") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "Zoom" "flatpak run us.zoom.Zoom" (className =? "zoom" <&&> title =? "Meeting") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "DrawIO" "google-chrome --app=https://app.diagrams.net --profile-directory='Default'" (resource =? "app.diagrams.net") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
@@ -136,7 +136,7 @@ myLayout = avoidStruts $ toggleLayouts Full (tiled ||| Mirror tiled ||| Full)
 -- resource => first part of WM_CLASS (primary)
 -- className => second part of WM_CLASS (secondary)
 myManageHook = composeAll
-    [ resource =? "chat.exxeta.com" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    [ resource =? "chat.exxeta.info" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , resource =? "app.diagrams.net" --> (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , className =? "Logseq" --> (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
     , (className =? "zoom" <&&> title =? "Meeting") --> (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
