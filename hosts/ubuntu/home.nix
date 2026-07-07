@@ -93,10 +93,19 @@ let
       echo "<fc=#98be65><fn=1>$ICON</fn></fc>"
     fi
   '';
+  brightness-up = pkgs.writeShellScriptBin "brightness-up" ''
+    brightnessctl set +5%
+    notify-send "Brightness: $(brightnessctl get)%"
+  '';
+  brightness-down = pkgs.writeShellScriptBin "brightness-down" ''
+    brightnessctl set 5%-
+    notify-send "Brightness: $(brightnessctl get)%"
+  '';
 in
 {
   imports = [
     ../../home/core.nix
+    ../../home/ai.nix
     ../../home/chromium.nix
     ../../home/spotify.nix
     ../../home/rofi/default.nix
@@ -111,6 +120,9 @@ in
     kb-status
     posture-toggle
     posture-status
+    brightness-up
+    brightness-down
+    brightnessctl
     kind
     picom # needed compositor for xmonad
     dbeaver-bin

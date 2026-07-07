@@ -12,8 +12,8 @@ import XMonad.Hooks.ManageHelpers (isDialog)
        -- Navigation
 import XMonad.Actions.CycleWS (nextScreen, prevScreen)
 
-       --- Utils
-import XMonad.Hooks.ManageDocks -- docks, avoidStruts
+        --- Utils
+import XMonad.Hooks.ManageDocks -- docks, avoidStruts, toggleStruts
 import XMonad.Util.EZConfig (additionalKeysP)
 import XMonad.Util.Run -- spawnPipe
 import XMonad.Util.SpawnOnce -- spawnOnce
@@ -53,6 +53,7 @@ myKeys =
        [ ("M-C-r", spawn "xmonad --recompile")
        , ("M-S-c", spawn "xmonad --recompile && xmonad --restart") -- Neustarten
        , ("M-q", kill)                                              -- Fenster schließen
+       , ("M-b", sendMessage ToggleStruts)                          -- Toggle xmobar
        --- Rofi
        , ("M-p", spawn "rofi -show drun")
        , ("M-c", spawn "clipcat-menu")
@@ -81,10 +82,12 @@ myKeys =
        , ("M-f", sendMessage (Toggle "Full"))         -- Umschalten in den Vollbildmodus
        -- Funktioniert nur, wenn die entsprechende Befehle auch ohne password eingabe funktionieren (USERNAME mit Nutzernamen ersetzen)
        -- echo "USERNAME ALL=(ALL) NOPASSWD: /usr/bin/wg-quick up wg0, /usr/bin/wg-quick down wg0, /usr/bin/wg show wg0" | sudo tee /etc/sudoers.d/wg-toggle && sudo chmod 440 /etc/sudoers.d/wg-toggle
-       , ("M-v", spawn "wg-toggle")                  -- VPN Toggle (wg0)
-       , ("M-s", spawn "kb-toggle")                  -- Keyboard layout toggle
-       , ("M-S-p", spawn "posture-toggle")            -- Sitzen/Stehen toggle
-       ]
+        , ("M-v", spawn "wg-toggle")                  -- VPN Toggle (wg0)
+        , ("M-s", spawn "kb-toggle")                  -- Keyboard layout toggle
+        , ("M-S-p", spawn "posture-toggle")            -- Sitzen/Stehen toggle
+        , ("<XF86MonBrightnessUp>", spawn "brightness-up")     -- Increase brightness
+        , ("<XF86MonBrightnessDown>", spawn "brightness-down") -- Decrease brightness
+        ]
 
 --- Scrachpad Definition
 myScratchpads :: [NamedScratchpad]

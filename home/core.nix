@@ -1,7 +1,11 @@
 { config, pkgs, ...}:
 
 {
-  programs.tmux.enable = true;
+  programs.tmux = {
+    enable = true;
+    keyMode = "vi";
+    mouse = true;
+  };
 
   programs.fzf.enable = true;
 
