@@ -7,7 +7,10 @@
     mouse = true;
   };
 
-  programs.fzf.enable = true;
+  programs.fzf = {
+    enable = true;
+    historyWidget.zsh.command = "";
+  };
 
   programs.fd.enable = true;
 
