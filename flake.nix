@@ -19,12 +19,6 @@
       lib = nixpkgs.lib.extend (self: _: {my = import ./lib {lib = self;};});
       system = "x86_64-linux";
       
-      # Base pkgs without insecure packages
-      basePkgs = import nixpkgs {
-        system = system;
-        config.allowUnfree = true;
-      };
-      
       # pkgs with insecure electron allowed (only for logseq on dwp7953)
       pkgsDwp7953 = import nixpkgs {
         system = system;
@@ -35,8 +29,6 @@
           ];
         };
       };
-      
-      pkgs = basePkgs;
     in {
 
     nixosConfigurations = {
