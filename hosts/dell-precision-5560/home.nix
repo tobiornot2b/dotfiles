@@ -28,6 +28,7 @@
       addKeysToAgent = "yes";
     };
   };
+  services.ssh-agent.enable = true;
 
   programs.git = {
     enable = true;
