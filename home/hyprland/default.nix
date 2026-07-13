@@ -1,5 +1,51 @@
 { config, pkgs, ... }:
+let
+  swapMonitors = pkgs.writeShellApplication {
+    name = "swap-monitors";
+    runtimeInputs = with pkgs; [ jq libnotify hyprland ];
+    text = ''
+      MONITORS_JSON=$(hyprctl monitors -j)
+
+      EDP_WIDTH=$(echo "$MONITORS_JSON" | jq -r '.[] | select(.name == "eDP-1") | .width')
+
+      if [ -z "$EDP_WIDTH" ]; then
+        notify-send "Monitor Swap" "eDP-1 not detected" || true
+        exit 1
+      fi
+
+      SORTED=$(echo "$MONITORS_JSON" | jq -c '[.[] | select(.name != "eDP-1")] | sort_by(.x)')
+      COUNT=$(echo "$SORTED" | jq 'length')
+
+      if [ "$COUNT" -lt 2 ]; then
+        notify-send "Monitor Swap" "Need at least 2 external monitors" || true
+        exit 1
+      fi
+
+      LEFT_NAME=$(echo "$SORTED"  | jq -r '.[0].name')
+      LEFT_W=$(echo "$SORTED"     | jq -r '.[0].width')
+      LEFT_H=$(echo "$SORTED"     | jq -r '.[0].height')
+      LEFT_HZ=$(echo "$SORTED"    | jq -r '.[0].refreshRate | round')
+
+      RIGHT_NAME=$(echo "$SORTED" | jq -r '.[1].name')
+      RIGHT_W=$(echo "$SORTED"    | jq -r '.[1].width')
+      RIGHT_H=$(echo "$SORTED"    | jq -r '.[1].height')
+      RIGHT_HZ=$(echo "$SORTED"   | jq -r '.[1].refreshRate | round')
+
+      # Three-step swap to avoid Hyprland overlap warnings:
+      # 1. Park left monitor beyond both screens (no overlap)
+      # 2. Move right monitor into left slot
+      # 3. Move left monitor into right slot (final position)
+      TEMP_X=$((EDP_WIDTH + LEFT_W + RIGHT_W))
+      hyprctl keyword monitor "$LEFT_NAME,''${LEFT_W}x''${LEFT_H}@''${LEFT_HZ},''${TEMP_X}x0,1"
+      hyprctl keyword monitor "$RIGHT_NAME,''${RIGHT_W}x''${RIGHT_H}@''${RIGHT_HZ},''${EDP_WIDTH}x0,1"
+      hyprctl keyword monitor "$LEFT_NAME,''${LEFT_W}x''${LEFT_H}@''${LEFT_HZ},$((EDP_WIDTH + RIGHT_W))x0,1"
+
+      notify-send "Monitor Swap" "$LEFT_NAME ↔ $RIGHT_NAME" || true
+    '';
+  };
+in
 {
+  home.packages = [ swapMonitors ];
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -102,6 +148,7 @@
         "SUPER  SHIFT,8,movetoworkspace,8"
         "SUPER  SHIFT,9,movetoworkspace,9"
         "SUPER  SHIFT,0,movetoworkspace,10"
+        "SUPER SHIFT,M,exec,swap-monitors"
       ];
 
       windowrule = [

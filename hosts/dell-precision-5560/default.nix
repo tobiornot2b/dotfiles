@@ -154,6 +154,9 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-39.8.10"
+  ];
   
   age.identityPaths = [
     "/etc/id_ed25519"
@@ -185,9 +188,10 @@
     dbeaver-bin
     grimblast
     jetbrains.idea
-    nodejs_24
+    nodejs_26
     logseq
     pulsemixer
+    jq
   ];
 
   stylix = {

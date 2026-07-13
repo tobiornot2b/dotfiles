@@ -44,6 +44,16 @@
   };
 
   # Create a symlink so the files can be changed without running home-manager again
-  # Path needs to be absolute to be working
-  home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/home/tobi/.dotfiles/config/nvim";
+  # Using standalone home.activation to bypass home.file management issues
+  home.activation.linkNvimConfig = 
+    let
+      nvimDir = "/home/tobi/.dotfiles/config/nvim";
+      configDir = "${config.home.homeDirectory}/.config/nvim";
+    in
+      config.lib.dag.entryAfter ["writeBoundary"] ''
+        rm -rf "${configDir}"
+        mkdir -p "$(dirname \"${configDir}\")"        
+        ln -s "${nvimDir}" "${configDir}"
+      '';
+
 }
