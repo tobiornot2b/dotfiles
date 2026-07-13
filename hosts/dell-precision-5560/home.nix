@@ -27,6 +27,12 @@
     matchBlocks."*" = {
       addKeysToAgent = "yes";
     };
+    # Host alias for dotfiles repo using specific key
+    matchBlocks."github-tobiornot2b" = {
+      hostname = "github.com";
+      identityFile = "~/.ssh/tobiornot2b_github";
+      addKeysToAgent = "yes";
+    };
   };
   services.ssh-agent.enable = true;
 
