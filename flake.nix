@@ -18,15 +18,25 @@
     let 
       lib = nixpkgs.lib.extend (self: _: {my = import ./lib {lib = self;};});
       system = "x86_64-linux";
-      pkgs = import nixpkgs {
+      
+      # Base pkgs without insecure packages
+      basePkgs = import nixpkgs {
+        system = system;
+        config.allowUnfree = true;
+      };
+      
+      # pkgs with insecure electron allowed (only for logseq on dwp7953)
+      pkgsDwp7953 = import nixpkgs {
         system = system;
         config = {
           allowUnfree = true;
           permittedInsecurePackages = [
-            "electron-39.8.10"
+            "electron-39.8.10"  # Required by logseq (EOL version)
           ];
         };
       };
+      
+      pkgs = basePkgs;
     in {
 
     nixosConfigurations = {
@@ -75,7 +85,7 @@
 
     homeConfigurations = {
       dwp7953 = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+        pkgs = pkgsDwp7953;
         modules = [
           ./hosts/ubuntu/home.nix
         ];
