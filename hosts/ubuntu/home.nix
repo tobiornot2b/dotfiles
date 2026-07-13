@@ -119,6 +119,9 @@ in
     nodeVersion = "24";
     theme = "dark";
     thinkingLevel = "medium";
+    piPackages = [
+      "npm:@juicesharp/rpiv-ask-user-question"
+    ];
   };
 
   home.packages = with pkgs; [

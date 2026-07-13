@@ -15,9 +15,9 @@ let
   else
     null;
   
-  # Pi config directory
-  piConfigHome = "${config.xdg.configHome}/pi";
-  piDataHome = "${config.xdg.dataHome}/pi";
+  # Pi config directory - uses ~/.pi/agent by default (PI_CODING_AGENT_DIR env var)
+  piConfigHome = "${config.home.homeDirectory}/.pi/agent";
+  piDataHome = "${config.home.homeDirectory}/.pi/agent";
   
 in
 {
@@ -38,13 +38,13 @@ in
     
     extensionsPath = mkOption {
       type = types.str;
-      default = "${config.xdg.configHome}/pi/extensions";
+      default = "${config.home.homeDirectory}/.pi/agent/extensions";
       description = "Path to pi extensions directory";
     };
     
     skillsPath = mkOption {
       type = types.str;
-      default = "${config.xdg.dataHome}/pi/skills";
+      default = "${config.home.homeDirectory}/.pi/agent/skills";
       description = "Path to pi skills directory";
     };
     
@@ -65,6 +65,13 @@ in
       default = "medium";
       description = "Default thinking level for claude models";
     };
+    
+    piPackages = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = "List of pi packages to install (e.g., ['npm:@juicesharp/rpiv-ask-user-question'])";
+      example = [ "npm:@juicesharp/rpiv-ask-user-question" "npm:@another/package@1.0.0" ];
+    };
   };
   
   config = mkIf cfg.enable {
@@ -76,11 +83,8 @@ in
     # 2. Create pi config directory structure
     home.file."${piConfigHome}/.keep".text = "";
     
-    # 3. Create pi data directory structure
-    home.file."${piDataHome}/.keep".text = "";
-    
-    # 4. Create settings.json
-    xdg.configFile."pi/settings.json" = mkIf (cfg.globalModels != []) {
+    # 3. Create settings.json
+    home.file."${piConfigHome}/settings.json" = mkIf (cfg.globalModels != []) {
       text = builtins.toJSON {
         thinking = cfg.thinkingLevel;
         theme = cfg.theme;
@@ -90,8 +94,8 @@ in
       };
     };
     
-    # 5. Create AGENTS.md template for project instructions
-    xdg.configFile."pi/agent/AGENTS.md" = {
+    # 4. Create AGENTS.md template for project instructions
+    home.file."${piConfigHome}/AGENTS.md" = {
       text = ''
         # Pi Agent Instructions
         
@@ -123,11 +127,27 @@ in
       '';
     };
     
-    # 6. Create basic extensions directory structure
+    # 5. Create basic extensions directory structure
     home.file."${cfg.extensionsPath}/.gitkeep".text = "";
     
-    # 7. Create basic skills directory structure
+    # 6. Create basic skills directory structure
     home.file."${cfg.skillsPath}/.gitkeep".text = "";
+    
+    # 7. Install pi packages (runs after home setup completes)
+    home.activation.piPackages = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+      lib.optionalString (cfg.piPackages != []) (
+        let
+          piCmd = "${cfg.package}/bin/pi";
+          installCmd = pkg: ''echo "Installing pi package: ${pkg}" && ${piCmd} install ${pkg} 2>/dev/null || echo "Note: Run 'pi install ${pkg}' manually if needed"'';
+        in
+          if cfg.package != null then
+            "export HOME=${config.home.homeDirectory}\n" +
+            lib.concatMapStringsSep "\n" installCmd cfg.piPackages
+          else
+            "# pi-coding-agent not available in this package set, skipping package installation\n" +
+            "# Install packages manually with: pi install ${lib.concatMapStringsSep " " (p: p) cfg.piPackages}"
+      )
+    );
     
     # 8. Informational message if pi-coding-agent not found
     warnings = lib.optionals (cfg.package == null) [

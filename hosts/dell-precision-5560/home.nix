@@ -14,6 +14,9 @@
     nodeVersion = "24";
     theme = "dark";
     thinkingLevel = "medium";
+    piPackages = [
+      "npm:@juicesharp/rpiv-ask-user-question"
+    ];
   };
 
   programs.home-manager.enable = true;
