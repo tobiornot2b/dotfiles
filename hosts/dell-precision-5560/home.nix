@@ -51,15 +51,18 @@
   };
 
   # Create a symlink so the files can be changed without running home-manager again
-  # Using standalone home.activation to bypass home.file management issues
+  # Must run before home-manager tries to create the directory
   home.activation.linkNvimConfig = 
     let
       nvimDir = "/home/tobi/.dotfiles/config/nvim";
       configDir = "${config.home.homeDirectory}/.config/nvim";
     in
-      config.lib.dag.entryAfter ["writeBoundary"] ''
-        rm -rf "${configDir}"
-        mkdir -p "$(dirname \"${configDir}\")"        
+      config.lib.dag.entryBefore ["writeBoundary"] ''
+        # Remove the symlink or directory if it exists
+        if [ -L "${configDir}" ] || [ -d "${configDir}" ]; then
+          rm -rf "${configDir}"
+        fi
+        mkdir -p "$(dirname \"${configDir}\")"
         ln -s "${nvimDir}" "${configDir}"
       '';
 

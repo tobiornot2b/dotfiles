@@ -64,6 +64,10 @@
     symbola
     powerline-fonts
     mononoki
+    # Nerd fonts for comprehensive icon/glyph support in neotree, treesitter, etc
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+    nerd-fonts.noto
   ];
 
   # shells
