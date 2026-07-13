@@ -32,47 +32,25 @@
     in {
 
     nixosConfigurations = {
-      tobi = lib.nixosSystem rec {
-         inherit system;
-         modules = [
-            ./hosts/thinkpad-t480 
-
-            agenix.nixosModules.default
-            {
-              environment.systemPackages = [ agenix.packages.${system}.default ];
-            }
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.tobi = import ./hosts/thinkpad-t480/home.nix;
-            }
-         ] ++ xmonad-contrib.nixosModules ++ [
-           xmonad-contrib.modernise.${system}
-         ] ++ [
-	    ./modules
-         ];
-      };
-
-      tobixx = lib.nixosSystem rec {
-         inherit system;
-         modules = [
+       tobixx = lib.nixosSystem rec {
+          inherit system;
+          modules = [
 	    # Do i need this when i run the disko install on its own?
 	    disko.nixosModules.disko
-            stylix.nixosModules.stylix
-            ./hosts/dell-precision-5560
-            agenix.nixosModules.default
-            {
-              environment.systemPackages = [ agenix.packages.${system}.default ];
-            }
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.tobi = import ./hosts/dell-precision-5560/home.nix;
-            }
-         ];
-       };
+             stylix.nixosModules.stylix
+             ./hosts/dell-precision-5560
+             agenix.nixosModules.default
+             {
+               environment.systemPackages = [ agenix.packages.${system}.default ];
+             }
+             home-manager.nixosModules.home-manager
+             {
+               home-manager.useGlobalPkgs = true;
+               home-manager.useUserPackages = true;
+               home-manager.users.tobi = import ./hosts/dell-precision-5560/home.nix;
+             }
+          ];
+        };
     };
 
     homeConfigurations = {

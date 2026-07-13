@@ -1,0 +1,14 @@
+{
+  "name": "pi-extensions",
+  "version": "1.0.0",
+  "description": "Custom extensions for Pi coding agent",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

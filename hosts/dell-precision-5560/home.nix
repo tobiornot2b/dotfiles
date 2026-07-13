@@ -1,11 +1,20 @@
 {pkgs, config, ...}: {
   imports = [
     ../../home
+    ../../home/pi-dev.nix
   ];
 
   home.username = "tobi";
   home.homeDirectory = "/home/tobi";
   home.stateVersion = "24.11";
+
+  # Enable Pi coding agent
+  home.pi-dev = {
+    enable = true;
+    nodeVersion = "24";
+    theme = "dark";
+    thinkingLevel = "medium";
+  };
 
   programs.home-manager.enable = true;
 

@@ -106,12 +106,20 @@ in
   imports = [
     ../../home/core.nix
     ../../home/ai.nix
+    ../../home/pi-dev.nix
     ../../home/chromium.nix
     ../../home/spotify.nix
     ../../home/rofi/default.nix
     ../../home/shell/default.nix
     ../../home/neovim/default.nix
   ];
+  
+  home.pi-dev = {
+    enable = true;
+    nodeVersion = "24";
+    theme = "dark";
+    thinkingLevel = "medium";
+  };
 
   home.packages = with pkgs; [
     wg-toggle

@@ -185,7 +185,7 @@
     dbeaver-bin
     grimblast
     jetbrains.idea
-    nodePackages.nodejs
+    nodejs_24
     logseq
     pulsemixer
   ];
