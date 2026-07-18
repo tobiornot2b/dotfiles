@@ -10,6 +10,27 @@
       # Necessary for using flakes on this system.
       nix.settings.experimental-features = [ "nix-command flakes" ];
 
+      system.primaryUser = "tobias.taschenberger";
+      system.defaults.NSGlobalDomain = {
+        # Disable automatic spell correction
+	NSAutomaticSpellingCorrectionEnabled = false;
+
+	# Disable automatic capitalization
+	NSAutomaticCapitalizationEnabled = false;
+
+	# Disable automatic dash substitution
+	NSAutomaticDashSubstitutionEnabled = false;
+
+	# Disable automatic period substitution
+	NSAutomaticPeriodSubstitutionEnabled = false;
+
+	# Disable automatic quote substitution
+	NSAutomaticQuoteSubstitutionEnabled = false;
+
+	# Enable key repeat instead of press-and-hold character popup
+	ApplePressAndHoldEnabled = false;
+      };
+
       # Enable alternative shell support in nix-darwin.
       # programs.fish.enable = true;
 
