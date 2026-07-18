@@ -12,9 +12,11 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, disko, stylix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, disko, stylix, nix-darwin, ... }@inputs:
     let 
       lib = nixpkgs.lib.extend (self: _: {my = import ./lib {lib = self;};});
       system = "x86_64-linux";
@@ -58,6 +60,15 @@
         pkgs = pkgsDwp7953;
         modules = [
           ./hosts/ubuntu/home.nix
+        ];
+      };
+    };
+
+    darwinConfigurations = {
+      MN-EXLRFJ470Y77 = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ./hosts/macos
         ];
       };
     };
