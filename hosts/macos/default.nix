@@ -13,6 +13,12 @@
           git
         ];
 
+      # Path mappings for homebrew needed (f.e. for podman)
+      environment.systemPath = [
+        "/opt/homebrew/bin"
+        "/opt/homebrew/sbin"
+      ];
+
       # Necessary for using flakes on this system.
       nix.settings.experimental-features = [ "nix-command flakes" ];
 

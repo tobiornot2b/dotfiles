@@ -5,6 +5,8 @@
     ../../home/shell
   ];
 
+  home.file.".aerospace.toml".source = ./aerospace.toml;
+
   home.username = "tobias.taschenberger";
   home.homeDirectory = "/Users/tobias.taschenberger";
   home.stateVersion = "24.11";
