@@ -66,18 +66,18 @@ https://github.com/NixOS/nix/issues/8508**
 nix-collect-garbage --delete-old`
 ```
 
-## Ubuntu
+## MacOS
 
-Make nix available in the current shell:
-
-```
-. /home/dwp7953/.nix-profile/etc/profile.d/nix.sh
-```
-
-Build the current setup:
+Initially the following command need to be used for install:
 
 ```
-nix run .#homeConfigurations.dwp7953.activationPackage
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake .#MN-EXLRFJ470Y77
+```
+
+This will install `darwin-` tools that can be used for the following builds:
+
+```
+sudo darwin-rebuild switch --flake .#MN-EXLRFJ470Y77
 ```
 
 ## Ubuntu

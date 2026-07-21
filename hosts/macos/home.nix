@@ -1,6 +1,8 @@
 {pkgs, config, ...}: {
   imports = [
+    ../../home/core.nix
     ../../home/ai.nix
+    ../../home/shell
   ];
 
   home.username = "tobias.taschenberger";

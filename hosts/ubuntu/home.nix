@@ -105,6 +105,7 @@ in
 {
   imports = [
     ../../home/core.nix
+    ../../home/graphical.nix
     ../../home/ai.nix
     ../../home/pi-dev.nix
     ../../home/chromium.nix

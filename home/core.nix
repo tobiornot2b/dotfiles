@@ -18,16 +18,12 @@
 
   programs.lazygit.enable = true;
 
-  programs.vscode.enable = true;
-
   programs.yazi = {
     enable = true;
     shellWrapperName = "y";
   };
 
   programs.zoxide.enable = true;
-
-  programs.zathura.enable = true;
 
   programs.k9s.enable = true;
 

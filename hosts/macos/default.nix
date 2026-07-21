@@ -1,5 +1,8 @@
 { pkgs, ... }: {
 
+      imports = [
+        ./homebrew.nix
+      ];
 
       users.users."tobias.taschenberger".home = "/Users/tobias.taschenberger";
       # List packages installed in system profile. To search by name, run:
