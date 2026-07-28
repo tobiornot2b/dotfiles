@@ -11,5 +11,6 @@
   home.packages = lib.optionals config.programs.neovim.enable [
     pkgs.gcc
     pkgs.gnumake
+    pkgs.tree-sitter
   ];
 }
