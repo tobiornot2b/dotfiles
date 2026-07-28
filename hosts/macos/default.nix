@@ -11,6 +11,7 @@
         [ 
           vim
           git
+          nodejs_24
         ];
 
       # Path mappings for homebrew needed (f.e. for podman)
