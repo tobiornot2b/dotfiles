@@ -94,6 +94,165 @@ Build the current setup:
 nix run .#homeConfigurations.dwp7953.activationPackage
 ```
 
+## nixos-anywhere: Remote NixOS Installation
+
+`nixos-anywhere` allows you to install NixOS on a remote machine from a Linux system. This is required when installing on x86_64 targets from macOS (cross-compilation not supported without complex Remote Building setup).
+
+### Prerequisites
+
+- A Linux machine with Nix installed (can be a temporary VM or remote server)
+- SSH access to the target server (running in Rescue Mode, BIOS, or live-boot)
+- The target server's SSH key fingerprint (verify via `ssh-keyscan`)
+- A defined NixOS configuration in the flake (e.g., `contabo-server`)
+- A LUKS encryption key file (if using disk encryption)
+
+### Step-by-step Installation
+
+#### 1. Prepare the LUKS key (if encryption is needed)
+
+Create a secure passphrase file **outside the repository**:
+
+```bash
+umask 077
+install -m 600 /dev/null /tmp/contabo-luks-key
+# Securely enter the passphrase (will not be echoed)
+cat > /tmp/contabo-luks-key << 'EOF'
+<your-secure-passphrase>
+EOF
+```
+
+**Important:** Never commit this file to git or display it in logs.
+
+#### 2. Verify SSH access to the target
+
+```bash
+ssh-keyscan -t ed25519 root@<TARGET_IP> >> ~/.ssh/known_hosts 2>/dev/null
+ssh root@<TARGET_IP> "uname -a && lsblk"
+```
+
+Replace `<TARGET_IP>` with the server's IP address (e.g., `62.84.178.194`).
+
+#### 3. Run nixos-anywhere from a Linux machine
+
+```bash
+cd /path/to/dotfiles
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#<HOST_NAME> \
+  --disk-encryption-keys /tmp/contabo-luks-key \
+  root@<TARGET_IP>
+```
+
+**Parameters:**
+- `<HOST_NAME>`: Your NixOS configuration name (e.g., `contabo-server`)
+- `<TARGET_IP>`: Target server IP (e.g., `62.84.178.194`)
+- `--disk-encryption-keys`: Path to the LUKS passphrase file
+
+**Example:**
+```bash
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#contabo-server \
+  --disk-encryption-keys /tmp/contabo-luks-key \
+  root@62.84.178.194
+```
+
+The process will:
+1. Connect via SSH
+2. Create a kexec (kernel boot in RAM)
+3. Partition the target disk according to disko configuration
+4. Format and encrypt (LUKS2) if configured
+5. Install NixOS
+6. Set up the bootloader
+7. Configure SSH and networking
+
+#### 4. Monitor the installation
+
+The installation output will show:
+- Disk partitioning progress
+- LUKS encryption setup
+- NixOS installation steps
+- Build logs
+
+**If an error occurs:**
+- Do NOT blindly reboot
+- Check the error message carefully
+- Verify disk/network configuration
+- Reconnect via SSH (Rescue System should still be active)
+- Check logs: `journalctl -xeu disko` or similar
+
+#### 5. First boot and LUKS unlock
+
+After successful installation:
+
+1. **Reboot the server** (via Contabo panel, KVM, or `reboot` command)
+2. **Open Contabo VNC/KVM console** (from the Contabo control panel)
+3. **Wait for LUKS unlock prompt**
+   - The boot process will pause with: `Passphrase for /dev/sda2 (or similar):`
+4. **Enter the LUKS passphrase** via the VNC/KVM console keyboard
+5. **System completes boot**, networking and SSH become available
+6. **SSH access resumes** normally after boot
+
+**Note:** Without entering the LUKS passphrase via VNC/KVM, the system cannot boot. This is expected behavior. Remote unlock solutions (initrd SSH, Clevis/Tang) require additional setup.
+
+#### 6. Verify the installation
+
+After first boot and LUKS unlock, SSH into the system:
+
+```bash
+ssh root@<TARGET_IP>
+```
+
+Run system checks:
+
+```bash
+hostnamectl
+uname -a
+findmnt
+lsblk -f
+systemctl status
+systemctl --failed
+resolvectl status
+```
+
+Verify LUKS encryption:
+
+```bash
+lsblk -f
+cryptsetup status cryptroot
+```
+
+#### 7. Clean up temporary files
+
+After successful installation, securely delete the LUKS key file:
+
+```bash
+shred -u /tmp/contabo-luks-key 2>/dev/null || rm -f /tmp/contabo-luks-key
+```
+
+### Troubleshooting
+
+**SSH connection refused:**
+- Verify the target server is in Rescue Mode or running a live system with SSH
+- Check firewall rules in the Contabo panel
+- Verify the SSH port is open (usually 22)
+
+**Disk not found:**
+- Run `lsblk` on the target server to confirm the device name
+- Update the disko configuration with the correct device (e.g., `/dev/sda`, `/dev/nvme0n1`)
+
+**LUKS passphrase incorrect:**
+- Reboot via VNC/KVM and try again
+- Remember that the passphrase must match exactly (including spaces, special chars)
+
+**Boot fails after installation:**
+- Use VNC/KVM to see boot errors
+- Check bootloader configuration (BIOS vs. UEFI)
+- Verify hardware-configuration.nix is correct for the target
+
+**nixos-anywhere hangs:**
+- SSH connection may be timing out
+- Check network connectivity on the target
+- Try increasing timeout: add `SSH_TIMEOUT=30` environment variable
+
 ## Display Link
 
 In order to install the DisplayLink drivers, you must first

@@ -35,24 +35,38 @@
 
     nixosConfigurations = {
        tobixx = lib.nixosSystem rec {
-          inherit system;
-          modules = [
-	    # Do i need this when i run the disko install on its own?
-	    disko.nixosModules.disko
-             stylix.nixosModules.stylix
-             ./hosts/dell-precision-5560
-             agenix.nixosModules.default
-             {
-               environment.systemPackages = [ agenix.packages.${system}.default ];
-             }
-             home-manager.nixosModules.home-manager
-             {
-               home-manager.useGlobalPkgs = true;
-               home-manager.useUserPackages = true;
-               home-manager.users.tobi = import ./hosts/dell-precision-5560/home.nix;
-             }
-          ];
-        };
+           inherit system;
+           modules = [
+ 	    # Do i need this when i run the disko install on its own?
+ 	    disko.nixosModules.disko
+              stylix.nixosModules.stylix
+              ./hosts/dell-precision-5560
+              agenix.nixosModules.default
+              {
+                environment.systemPackages = [ agenix.packages.${system}.default ];
+              }
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.tobi = import ./hosts/dell-precision-5560/home.nix;
+              }
+           ];
+         };
+
+       contabo-server = lib.nixosSystem rec {
+           inherit system;
+           modules = [
+              disko.nixosModules.disko
+              ./hosts/contabo-server
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.root = import ./hosts/contabo-server/home.nix;
+              }
+           ];
+         };
     };
 
     homeConfigurations = {
