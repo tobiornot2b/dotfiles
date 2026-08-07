@@ -31,7 +31,7 @@
       nvimDir = "/Users/tobias.taschenberger/.dotfiles/config/nvim";
       configDir = "${config.home.homeDirectory}/.config/nvim";
     in
-      config.lib.dag.entryBefore ["writeBoundary"] ''
+      config.lib.dag.entryBetween ["preActivationVariables"] ["preActivation"] ''
         # Remove the symlink or directory if it exists
         if [ -L "${configDir}" ] || [ -d "${configDir}" ]; then
           rm -rf "${configDir}"
