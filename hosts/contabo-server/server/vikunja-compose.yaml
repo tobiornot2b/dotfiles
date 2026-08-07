@@ -10,6 +10,7 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=vikunja-web
+      - --providers.docker.apiversion=1.47
 
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
