@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../../home
+    ../../home/core.nix
   ];
   # Minimal home manager configuration for server
   # Root user has minimal customization
