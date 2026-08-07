@@ -6,6 +6,8 @@
     ./disko.nix
   ];
 
+  nixpkgs.config.allowUnfree = true;
+
   # Bootloader: BIOS/Legacy boot with GPT disk (via disko).
   # Do NOT set boot.loader.grub.device here — disko auto-configures
   # boot.loader.grub.devices from the EF02 BIOS boot partition in disko.nix.
