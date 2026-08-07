@@ -1,16 +1,15 @@
 services:
   traefik:
-    image: traefik:2.11.16
+    image: traefik:3.7.10
 
     environment:
-      DOCKER_API_VERSION: "1.40"
+      DOCKER_API_VERSION: "1.47"
 
     command:
       - --api.dashboard=false
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=vikunja-web
-      - --providers.docker.apiversion=1.47
 
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
