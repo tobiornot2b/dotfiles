@@ -23,5 +23,6 @@
     "aerospace"
     "ghostty"
     "raycast"
+    "sweet-home3d"
   ];
 }
