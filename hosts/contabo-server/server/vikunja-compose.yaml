@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v4.1.0
+    image: traefik:3.4.0
 
     command:
       - --api.dashboard=false
