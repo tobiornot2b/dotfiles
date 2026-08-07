@@ -96,162 +96,167 @@ nix run .#homeConfigurations.dwp7953.activationPackage
 
 ## nixos-anywhere: Remote NixOS Installation
 
-`nixos-anywhere` allows you to install NixOS on a remote machine from a Linux system. This is required when installing on x86_64 targets from macOS (cross-compilation not supported without complex Remote Building setup).
+`nixos-anywhere` allows you to install NixOS on a remote machine over SSH. This is the method used for the `contabo-server` configuration and can be reused for any future server.
 
 ### Prerequisites
 
-- A Linux machine with Nix installed (can be a temporary VM or remote server)
-- SSH access to the target server (running in Rescue Mode, BIOS, or live-boot)
-- The target server's SSH key fingerprint (verify via `ssh-keyscan`)
-- A defined NixOS configuration in the flake (e.g., `contabo-server`)
-- A LUKS encryption key file (if using disk encryption)
+- A Linux machine with Nix installed (the machine you run commands from)
+- SSH access to the target server with password auth (Rescue Mode or fresh VPS)
+- A NixOS configuration in the flake (e.g., `contabo-server`)
+- A LUKS passphrase if disk encryption is desired
+
+### Key design decisions (contabo-server)
+
+- **Partition table: GPT** — disko does not support MBR/msdos partition tables. GPT is used even for BIOS/Legacy boot systems.
+- **BIOS boot partition** — A 1 MB `EF02` partition is required for GRUB to embed itself on a GPT disk without UEFI.
+- **`boot.loader.grub.device` must NOT be set** in `default.nix`. Disko auto-configures `boot.loader.grub.devices` from the `EF02` partition. Setting it manually causes a `duplicated devices in mirroredBoots` assertion failure.
+- **`fileSystems` must NOT be set** in `hardware-configuration.nix`. Disko generates them using `/dev/disk/by-partlabel` paths; static `/dev/sdaX` entries from `nixos-generate-config` conflict with these.
 
 ### Step-by-step Installation
 
-#### 1. Prepare the LUKS key (if encryption is needed)
+#### 1. Add your SSH public key to the NixOS configuration
 
-Create a secure passphrase file **outside the repository**:
+Before installing, make sure your public key is in `authorizedKeys` in `hosts/<HOST>/default.nix`. After installation SSH password login is disabled — if your key is missing there is no way in.
 
 ```bash
-umask 077
-install -m 600 /dev/null /tmp/contabo-luks-key
-# Securely enter the passphrase (will not be echoed)
-cat > /tmp/contabo-luks-key << 'EOF'
-<your-secure-passphrase>
-EOF
+cat ~/.ssh/id_ed25519.pub
 ```
 
-**Important:** Never commit this file to git or display it in logs.
+Add the output to `users.users.root.openssh.authorizedKeys.keys` in the host config.
 
-#### 2. Verify SSH access to the target
+#### 2. Upload your SSH key to the rescue system
+
+The target server likely only accepts password auth in rescue mode. Upload your key so nixos-anywhere can connect without a password:
 
 ```bash
-ssh-keyscan -t ed25519 root@<TARGET_IP> >> ~/.ssh/known_hosts 2>/dev/null
+# Install sshpass temporarily if needed
+nix-shell -p sshpass --run "sshpass -p '<rescue-password>' ssh-copy-id -o StrictHostKeyChecking=no root@<TARGET_IP>"
+
+# Verify key auth works
 ssh root@<TARGET_IP> "uname -a && lsblk"
 ```
 
-Replace `<TARGET_IP>` with the server's IP address (e.g., `62.84.178.194`).
+#### 3. Prepare the LUKS key file
 
-#### 3. Run nixos-anywhere from a Linux machine
+Create the passphrase file **outside the repository** (never commit it):
 
 ```bash
-cd /path/to/dotfiles
+umask 077
+printf '<your-secure-passphrase>' > /tmp/contabo-luks-key
+chmod 600 /tmp/contabo-luks-key
+```
+
+#### 4. Run nixos-anywhere
+
+```bash
+cd ~/.dotfiles
 nix run github:nix-community/nixos-anywhere -- \
   --flake .#<HOST_NAME> \
-  --disk-encryption-keys /tmp/contabo-luks-key \
+  --disk-encryption-keys /tmp/contabo-luks-key /tmp/contabo-luks-key \
   root@<TARGET_IP>
 ```
 
-**Parameters:**
-- `<HOST_NAME>`: Your NixOS configuration name (e.g., `contabo-server`)
-- `<TARGET_IP>`: Target server IP (e.g., `62.84.178.194`)
-- `--disk-encryption-keys`: Path to the LUKS passphrase file
+The `--disk-encryption-keys` flag takes two arguments: `<remote-path> <local-path>`.
+nixos-anywhere uploads the local file to the remote path before running disko.
+The remote path must match the `keyFile` value in `disko.nix`.
 
-**Example:**
+**Example (contabo-server):**
 ```bash
 nix run github:nix-community/nixos-anywhere -- \
   --flake .#contabo-server \
-  --disk-encryption-keys /tmp/contabo-luks-key \
+  --disk-encryption-keys /tmp/contabo-luks-key /tmp/contabo-luks-key \
   root@62.84.178.194
 ```
 
 The process will:
-1. Connect via SSH
-2. Create a kexec (kernel boot in RAM)
-3. Partition the target disk according to disko configuration
-4. Format and encrypt (LUKS2) if configured
-5. Install NixOS
-6. Set up the bootloader
-7. Configure SSH and networking
-
-#### 4. Monitor the installation
-
-The installation output will show:
-- Disk partitioning progress
-- LUKS encryption setup
-- NixOS installation steps
-- Build logs
-
-**If an error occurs:**
-- Do NOT blindly reboot
-- Check the error message carefully
-- Verify disk/network configuration
-- Reconnect via SSH (Rescue System should still be active)
-- Check logs: `journalctl -xeu disko` or similar
+1. Boot a temporary NixOS environment in RAM via kexec
+2. Partition the disk according to `disko.nix`
+3. Format, encrypt (LUKS2), and mount filesystems
+4. Install the NixOS system closure
+5. Install GRUB and reboot
 
 #### 5. First boot and LUKS unlock
 
-After successful installation:
+After the reboot nixos-anywhere triggers, the system will pause at the LUKS
+unlock prompt — there is no remote way to enter this on first boot.
 
-1. **Reboot the server** (via Contabo panel, KVM, or `reboot` command)
-2. **Open Contabo VNC/KVM console** (from the Contabo control panel)
-3. **Wait for LUKS unlock prompt**
-   - The boot process will pause with: `Passphrase for /dev/sda2 (or similar):`
-4. **Enter the LUKS passphrase** via the VNC/KVM console keyboard
-5. **System completes boot**, networking and SSH become available
-6. **SSH access resumes** normally after boot
+1. **Open the Contabo VNC/KVM console** (Contabo control panel → KVM)
+2. **Wait for the prompt:** `Please enter passphrase for disk ... (cryptroot):`
+3. **Type the LUKS passphrase** and press Enter
+4. The system completes boot; SSH becomes available again
 
-**Note:** Without entering the LUKS passphrase via VNC/KVM, the system cannot boot. This is expected behavior. Remote unlock solutions (initrd SSH, Clevis/Tang) require additional setup.
+> Without the LUKS passphrase the system cannot boot. This is by design.
+> For unattended reboots, consider setting up initrd SSH or Clevis/Tang.
 
-#### 6. Verify the installation
+#### 6. First SSH connection after install
 
-After first boot and LUKS unlock, SSH into the system:
+The host key has changed (new NixOS install). Remove the old entry and connect:
 
 ```bash
+ssh-keygen -R <TARGET_IP>
 ssh root@<TARGET_IP>
 ```
 
-Run system checks:
+Or accept the new key in one step:
+
+```bash
+ssh -o StrictHostKeyChecking=accept-new root@<TARGET_IP>
+```
+
+#### 7. Verify the installation
 
 ```bash
 hostnamectl
 uname -a
-findmnt
-lsblk -f
-systemctl status
-systemctl --failed
-resolvectl status
-```
-
-Verify LUKS encryption:
-
-```bash
 lsblk -f
 cryptsetup status cryptroot
+systemctl --failed
 ```
 
-#### 7. Clean up temporary files
-
-After successful installation, securely delete the LUKS key file:
+#### 8. Clean up the LUKS key file
 
 ```bash
 shred -u /tmp/contabo-luks-key 2>/dev/null || rm -f /tmp/contabo-luks-key
 ```
 
+### Subsequent configuration changes
+
+After the initial install, deploy changes with:
+
+```bash
+# NIX_SSHOPTS forces use of a specific key, avoiding "too many auth failures"
+# when ssh-agent has many keys loaded.
+NIX_SSHOPTS="-i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes" \
+  nixos-rebuild switch --flake .#contabo-server --target-host root@62.84.178.194
+```
+
 ### Troubleshooting
 
-**SSH connection refused:**
-- Verify the target server is in Rescue Mode or running a live system with SSH
+**SSH: "Too many authentication failures"**
+- The SSH client tried too many keys before the correct one. Use `NIX_SSHOPTS` to pin the identity (see Subsequent configuration changes above).
+
+**SSH connection refused / timeout**
+- Verify the server is in Rescue Mode or running a live system with SSH enabled
 - Check firewall rules in the Contabo panel
-- Verify the SSH port is open (usually 22)
 
-**Disk not found:**
-- Run `lsblk` on the target server to confirm the device name
-- Update the disko configuration with the correct device (e.g., `/dev/sda`, `/dev/nvme0n1`)
+**`attribute 'mbr' missing` / `attribute 'msdos' missing`**
+- Disko only supports `gpt` as disk content type. See Key design decisions above.
 
-**LUKS passphrase incorrect:**
-- Reboot via VNC/KVM and try again
-- Remember that the passphrase must match exactly (including spaces, special chars)
+**`duplicated devices in mirroredBoots`**
+- `boot.loader.grub.device` is set explicitly alongside the disko-generated value. Remove the explicit setting from `default.nix`.
 
-**Boot fails after installation:**
+**`fileSystems."/boot".device has conflicting definition values`**
+- `hardware-configuration.nix` contains static `fileSystems` entries that conflict with disko. Remove them — disko manages all filesystem definitions.
+
+**Disk not found**
+- Run `lsblk` on the target to confirm the device name and update `disko.nix` accordingly (e.g., `/dev/sda` vs `/dev/nvme0n1`).
+
+**LUKS passphrase incorrect**
+- Reboot via VNC/KVM and try again. The passphrase must match exactly.
+
+**Boot fails after installation**
 - Use VNC/KVM to see boot errors
-- Check bootloader configuration (BIOS vs. UEFI)
-- Verify hardware-configuration.nix is correct for the target
-
-**nixos-anywhere hangs:**
-- SSH connection may be timing out
-- Check network connectivity on the target
-- Try increasing timeout: add `SSH_TIMEOUT=30` environment variable
+- Verify BIOS vs. UEFI: the current config is BIOS/Legacy. For UEFI, replace the `EF02` BIOS boot partition with an `EF00` EFI System Partition and switch to `boot.loader.systemd-boot` or `boot.loader.grub.efiSupport = true`.
 
 ## Display Link
 
