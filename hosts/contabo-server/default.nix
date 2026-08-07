@@ -62,7 +62,6 @@
   systemd.targets.sleep.enable = false;
   systemd.targets.suspend.enable = false;
 
-  # Minimal server packages
   environment.systemPackages = with pkgs; [
     vim
     git
@@ -73,6 +72,7 @@
     wget
     docker
     docker-compose
+    claude-code
   ];
 
   # Docker
