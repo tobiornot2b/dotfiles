@@ -4,6 +4,8 @@
         ./homebrew.nix
       ];
 
+      nixpkgs.config.allowUnfree = true;
+
       users.users."tobias.taschenberger".home = "/Users/tobias.taschenberger";
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
@@ -12,6 +14,7 @@
           vim
           git
           nodejs_24
+          claude-code
         ];
 
       # Path mappings for homebrew needed (f.e. for podman)
