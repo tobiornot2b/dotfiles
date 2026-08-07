@@ -96,7 +96,7 @@ nix run .#homeConfigurations.dwp7953.activationPackage
 
 ## nixos-anywhere: Remote NixOS Installation
 
-`nixos-anywhere` allows you to install NixOS on a remote machine over SSH. This is the method used for the `contabo-server` configuration and can be reused for any future server.
+`nixos-anywhere` allows you to install NixOS on a remote machine over SSH. This is the method used for the `contabo-server` configuration and can be reused for any future server. The contabo VPC can be put into rescue mode at new.contabo.com.
 
 ### Prerequisites
 
