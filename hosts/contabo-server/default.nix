@@ -84,21 +84,23 @@
     443
   ];
 
-  # Create directories for Vikunja
+  # Create directories for containerized applications
   systemd.tmpfiles.rules = [
-    "d /var/lib/vikunja 0755 root root -"
-    "d /var/lib/vikunja/files 0777 root root -"
-    "d /var/lib/vikunja/letsencrypt 0755 root root -"
-    "d /var/lib/vikunja/postgres 0777 root root -"
-    "f /var/lib/vikunja/letsencrypt/acme.json 0600 root root -"
+    "d /var/lib/apps 0755 root root -"
+    "d /var/lib/apps/vikunja 0755 root root -"
+    "d /var/lib/apps/vikunja/files 0777 root root -"
+    "d /var/lib/apps/postgres 0755 root root -"
+    "d /var/lib/apps/postgres/data 0777 root root -"
+    "d /var/lib/apps/letsencrypt 0755 root root -"
+    "f /var/lib/apps/letsencrypt/acme.json 0600 root root -"
   ];
 
-  # Deploy Vikunja Compose file to /etc
-  environment.etc."vikunja/compose.yaml".source = ./server/vikunja-compose.yaml;
+  # Deploy Docker Compose file to /etc
+  environment.etc."apps/docker-compose.yaml".source = ./server/docker-compose.yaml;
 
-  # systemd service for Vikunja Compose stack
-  systemd.services.vikunja-compose = {
-    description = "Vikunja Docker Compose stack";
+  # systemd service for containerized applications stack
+  systemd.services.apps-compose = {
+    description = "Docker Compose applications stack";
 
     wantedBy = [ "multi-user.target" ];
 
@@ -113,24 +115,24 @@
     ];
 
     restartTriggers = [
-      ./server/vikunja-compose.yaml
+      ./server/docker-compose.yaml
     ];
 
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      WorkingDirectory = "/etc/vikunja";
+      WorkingDirectory = "/etc/apps";
 
       ExecStart =
         "${pkgs.docker-compose}/bin/docker-compose "
-        + "--env-file /var/lib/vikunja/.env "
-        + "-f /etc/vikunja/compose.yaml "
+        + "--env-file /var/lib/apps/.env "
+        + "-f /etc/apps/docker-compose.yaml "
         + "up --detach --remove-orphans";
 
       ExecStop =
         "${pkgs.docker-compose}/bin/docker-compose "
-        + "--env-file /var/lib/vikunja/.env "
-        + "-f /etc/vikunja/compose.yaml "
+        + "--env-file /var/lib/apps/.env "
+        + "-f /etc/apps/docker-compose.yaml "
         + "down";
     };
   };

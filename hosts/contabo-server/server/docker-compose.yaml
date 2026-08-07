@@ -9,7 +9,7 @@ services:
       - --api.dashboard=false
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --providers.docker.network=vikunja-web
+      - --providers.docker.network=apps-web
 
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
@@ -28,7 +28,7 @@ services:
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /var/lib/vikunja/letsencrypt:/letsencrypt
+      - /var/lib/apps/letsencrypt:/letsencrypt
 
     networks:
       - web
@@ -41,19 +41,19 @@ services:
     environment:
       VIKUNJA_SERVICE_PUBLICURL: https://todo.tobiornot2b.com/
 
-      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_DATABASE_HOST: postgres
       VIKUNJA_DATABASE_TYPE: postgres
       VIKUNJA_DATABASE_USER: ${POSTGRES_USER}
       VIKUNJA_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
-      VIKUNJA_DATABASE_DATABASE: ${POSTGRES_DB}
+      VIKUNJA_DATABASE_DATABASE: ${VIKUNJA_DATABASE_NAME}
 
       VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_SERVICE_JWTSECRET}
 
     volumes:
-      - /var/lib/vikunja/files:/app/vikunja/files
+      - /var/lib/apps/vikunja/files:/app/vikunja/files
 
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
 
     networks:
@@ -62,7 +62,7 @@ services:
 
     labels:
       - traefik.enable=true
-      - traefik.docker.network=vikunja-web
+      - traefik.docker.network=apps-web
 
       - traefik.http.routers.vikunja.rule=Host(`todo.tobiornot2b.com`)
       - traefik.http.routers.vikunja.entrypoints=websecure
@@ -73,16 +73,16 @@ services:
 
     restart: unless-stopped
 
-  db:
+  postgres:
     image: postgres:18.4
 
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_INITDB_ARGS: -c shared_buffers=256MB -c max_connections=200
 
     volumes:
-      - /var/lib/vikunja/postgres:/var/lib/postgresql
+      - /var/lib/apps/postgres/data:/var/lib/postgresql
 
     networks:
       - backend
@@ -90,7 +90,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+        - pg_isready -U "$$POSTGRES_USER"
       interval: 10s
       timeout: 5s
       retries: 10
@@ -100,8 +100,8 @@ services:
 
 networks:
   web:
-    name: vikunja-web
+    name: apps-web
 
   backend:
-    name: vikunja-backend
+    name: apps-backend
     internal: true
