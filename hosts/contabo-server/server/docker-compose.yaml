@@ -9,7 +9,7 @@ services:
       - --api.dashboard=false
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --providers.docker.network=apps-web
+      - --providers.docker.network=apps-backend
 
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
@@ -32,6 +32,7 @@ services:
 
     networks:
       - web
+      - backend
 
     restart: unless-stopped
 
@@ -57,12 +58,11 @@ services:
         condition: service_healthy
 
     networks:
-      - web
       - backend
 
     labels:
       - traefik.enable=true
-      - traefik.docker.network=apps-web
+      - traefik.docker.network=apps-backend
 
       - traefik.http.routers.vikunja.rule=Host(`todo.tobiornot2b.com`)
       - traefik.http.routers.vikunja.entrypoints=websecure

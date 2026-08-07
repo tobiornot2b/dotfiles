@@ -25,18 +25,22 @@ Internet (HTTPS on port 443)
    - Listens on ports 80 (HTTP) and 443 (HTTPS)
    - Automatically handles Let's Encrypt certificate renewal
    - Routes incoming traffic to backend services based on hostname
-   - Forwards requests to Vikunja at internal hostname `vikunja` (via Docker network)
+   - Connects to both `web` (public) and `backend` (internal) networks
+   - Discovers services via Docker provider on the `backend` network
+   - Forwards requests to Vikunja at internal hostname `vikunja` (via `backend` network)
    - Certificate stored in `/var/lib/apps/letsencrypt/acme.json`
 
 2. **Vikunja** (`apps-vikunja-1`)
    - Todo/task management application
-   - Receives requests from Traefik via Docker internal network
+   - **Only on `backend` network** (not exposed to public `web` network)
+   - Receives requests **only from Traefik** (cannot be accessed directly)
    - Connects to PostgreSQL at internal hostname `postgres` (port 5432)
    - Stores uploaded files in `/var/lib/apps/vikunja/files/`
    - Database credentials passed via environment variables from agenix
 
 3. **PostgreSQL** (`apps-postgres-1`)
    - Relational database backend
+   - Only on `backend` network (marked `internal: true`, completely isolated)
    - Listens on port 5432 (internal Docker network only, not exposed to internet)
    - Data persisted in `/var/lib/apps/postgres/data/`
    - Health checks verify database connectivity
@@ -66,7 +70,7 @@ Internet (HTTPS on port 443)
   - Uses generic service names (`apps-traefik-1`, `apps-postgres-1`, `apps-vikunja-1`)
   - Enables easy addition of future services
   - Networks:
-    - `traefik` - Public-facing (Traefik only)
+    - `web` - Public-facing (Traefik only)
     - `apps` - Internal service-to-service communication
     - No direct internet access for database or app
 
@@ -166,8 +170,19 @@ cd /root/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-se
 - Nameservers: `195.179.224.53`, `209.126.15.53` (Contabo DNS)
 
 ### Internal Docker Networks
-- **`traefik`** - Traefik container only (no other services)
-- **`apps`** - Traefik, Vikunja, PostgreSQL (service-to-service communication)
+
+The service architecture uses two separate Docker networks for security:
+
+- **`web` (apps-web)** - Public-facing network
+  - Only Traefik listens to ports 80 and 443
+  - Receives all internet traffic
+  - **Isolated from application services**
+
+- **`backend` (apps-backend)** - Internal application network
+  - Marked `internal: true` - cannot access internet
+  - Traefik, Vikunja, and PostgreSQL communicate here
+  - **Security guarantee**: No container on this network can be directly accessed from internet
+  - Traefik bridges both networks, routing public traffic to backend services
 
 ## Maintenance
 
