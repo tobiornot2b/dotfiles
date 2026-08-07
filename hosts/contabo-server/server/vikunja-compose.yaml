@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.3
+    image: traefik:v4.1.0
 
     command:
       - --api.dashboard=false
@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
 
   vikunja:
-    image: vikunja/vikunja
+    image: vikunja/vikunja:0.24.0
 
     environment:
       VIKUNJA_SERVICE_PUBLICURL: https://todo.tobiornot2b.com/
@@ -71,7 +71,7 @@ services:
     restart: unless-stopped
 
   db:
-    image: postgres:16
+    image: postgres:16.4
 
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
