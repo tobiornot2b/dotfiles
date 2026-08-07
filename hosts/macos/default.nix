@@ -14,7 +14,6 @@
           vim
           git
           nodejs_24
-          claude-code
         ];
 
       # Path mappings for homebrew needed (f.e. for podman)
