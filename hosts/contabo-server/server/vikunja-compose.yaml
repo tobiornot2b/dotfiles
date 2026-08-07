@@ -1,0 +1,104 @@
+services:
+  traefik:
+    image: traefik:v3.3
+
+    command:
+      - --api.dashboard=false
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=vikunja-web
+
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/vikunja/letsencrypt:/letsencrypt
+
+    networks:
+      - web
+
+    restart: unless-stopped
+
+  vikunja:
+    image: vikunja/vikunja
+
+    environment:
+      VIKUNJA_SERVICE_PUBLICURL: https://todo.tobiornot2b.com/
+
+      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_DATABASE_TYPE: postgres
+      VIKUNJA_DATABASE_USER: ${POSTGRES_USER}
+      VIKUNJA_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      VIKUNJA_DATABASE_DATABASE: ${POSTGRES_DB}
+
+      VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_SERVICE_JWTSECRET}
+
+    volumes:
+      - /var/lib/vikunja/files:/app/vikunja/files
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - web
+      - backend
+
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=vikunja-web
+
+      - traefik.http.routers.vikunja.rule=Host(`todo.tobiornot2b.com`)
+      - traefik.http.routers.vikunja.entrypoints=websecure
+      - traefik.http.routers.vikunja.tls=true
+      - traefik.http.routers.vikunja.tls.certresolver=letsencrypt
+
+      - traefik.http.services.vikunja.loadbalancer.server.port=3456
+
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    volumes:
+      - /var/lib/vikunja/postgres:/var/lib/postgresql/data
+
+    networks:
+      - backend
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+    restart: unless-stopped
+
+networks:
+  web:
+    name: vikunja-web
+
+  backend:
+    name: vikunja-backend
+    internal: true

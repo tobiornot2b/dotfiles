@@ -71,7 +71,69 @@
     netcat
     curl
     wget
+    docker
+    docker-compose
   ];
+
+  # Docker
+  virtualisation.docker.enable = true;
+
+  # Firewall: allow HTTP and HTTPS for Traefik
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
+
+  # Create directories for Vikunja
+  systemd.tmpfiles.rules = [
+    "d /var/lib/vikunja 0750 root root -"
+    "d /var/lib/vikunja/files 0750 root root -"
+    "d /var/lib/vikunja/letsencrypt 0700 root root -"
+    "d /var/lib/vikunja/postgres 0700 root root -"
+    "f /var/lib/vikunja/letsencrypt/acme.json 0600 root root -"
+  ];
+
+  # Deploy Vikunja Compose file to /etc
+  environment.etc."vikunja/compose.yaml".source = ./server/vikunja-compose.yaml;
+
+  # systemd service for Vikunja Compose stack
+  systemd.services.vikunja-compose = {
+    description = "Vikunja Docker Compose stack";
+
+    wantedBy = [ "multi-user.target" ];
+
+    after = [
+      "docker.service"
+      "network-online.target"
+    ];
+
+    wants = [
+      "docker.service"
+      "network-online.target"
+    ];
+
+    restartTriggers = [
+      ./server/vikunja-compose.yaml
+    ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      WorkingDirectory = "/etc/vikunja";
+
+      ExecStart =
+        "${pkgs.docker-compose}/bin/docker-compose "
+        + "--env-file /var/lib/vikunja/.env "
+        + "-f /etc/vikunja/compose.yaml "
+        + "up --detach --remove-orphans";
+
+      ExecStop =
+        "${pkgs.docker-compose}/bin/docker-compose "
+        + "--env-file /var/lib/vikunja/.env "
+        + "-f /etc/vikunja/compose.yaml "
+        + "down";
+    };
+  };
 
   # Enable Nix flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
