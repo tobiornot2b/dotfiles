@@ -55,18 +55,22 @@
          };
 
        contabo-server = lib.nixosSystem rec {
-           inherit system;
-           modules = [
-              disko.nixosModules.disko
-              ./hosts/contabo-server
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.root = import ./hosts/contabo-server/home.nix;
-              }
-           ];
-         };
+            inherit system;
+            modules = [
+               disko.nixosModules.disko
+               agenix.nixosModules.default
+               ./hosts/contabo-server
+               {
+                 environment.systemPackages = [ agenix.packages.${system}.default ];
+               }
+               home-manager.nixosModules.home-manager
+               {
+                 home-manager.useGlobalPkgs = true;
+                 home-manager.useUserPackages = true;
+                 home-manager.users.root = import ./hosts/contabo-server/home.nix;
+               }
+            ];
+          };
     };
 
     homeConfigurations = {
