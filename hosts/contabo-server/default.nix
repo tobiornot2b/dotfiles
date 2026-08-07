@@ -86,10 +86,10 @@
 
   # Create directories for Vikunja
   systemd.tmpfiles.rules = [
-    "d /var/lib/vikunja 0750 root root -"
+    "d /var/lib/vikunja 0755 root root -"
     "d /var/lib/vikunja/files 0777 root root -"
-    "d /var/lib/vikunja/letsencrypt 0700 root root -"
-    "d /var/lib/vikunja/postgres 0700 root root -"
+    "d /var/lib/vikunja/letsencrypt 0755 root root -"
+    "d /var/lib/vikunja/postgres 0777 root root -"
     "f /var/lib/vikunja/letsencrypt/acme.json 0600 root root -"
   ];
 
