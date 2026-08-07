@@ -2,23 +2,25 @@
 
 ## Repo purpose
 
-Dotfiles managed with Nix flakes. Three configurations:
+Dotfiles managed with Nix flakes. Four host configurations:
 - **`tobi`** — ThinkPad T480, NixOS, XMonad (X11)
 - **`tobixx`** — Dell Precision 5560, NixOS, Hyprland (Wayland)
-- **`dwp7953`** — Current machine (Ubuntu), standalone home-manager only, XMonad (X11)
+- **`dwp7953`** — Ubuntu (standalone home-manager only), XMonad (X11)
+- **`MN-EXLRFJ470Y77`** — MacBook Pro (nix-darwin + home-manager), aarch64-darwin
 - **`contabo-server`** — Contabo VPS (NixOS), containerized applications with Docker Compose + Traefik
 
 ## Critical commands
 
-### NixOS hosts (local)
+### NixOS hosts
 ```bash
-sudo nixos-rebuild switch --flake .#tobi      # ThinkPad
-sudo nixos-rebuild switch --flake .#tobixx    # Dell
+sudo nixos-rebuild switch --flake .#tobi
+sudo nixos-rebuild switch --flake .#tobixx
+sudo nixos-rebuild switch --flake .#contabo-server  # via SSH
 ```
 
-### Contabo server (remote via SSH)
+### macOS (nix-darwin)
 ```bash
-ssh root@62.84.178.194 'cd /root/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server'
+darwin-rebuild switch --flake .#MN-EXLRFJ470Y77
 ```
 
 ### Ubuntu (standalone home-manager)
@@ -29,21 +31,49 @@ source ~/.nix-profile/etc/profile.d/nix.sh
 nix run .#homeConfigurations.dwp7953.activationPackage
 ```
 
-### Maintenance
+### Maintenance (all hosts)
 ```bash
 nix flake update                              # update all inputs
-sudo nix-collect-garbage -d                   # GC as root (system)
-nix-collect-garbage -d                        # GC as user (home-manager)
+nix-collect-garbage -d                        # user home-manager packages
+sudo nix-collect-garbage -d                   # system packages (NixOS/darwin only)
+```
+
+### Contabo server (remote deployment)
+```bash
+ssh root@62.84.178.194 'cd /root/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server'
 ```
 
 ## Architecture
 
-- `flake.nix` — single entrypoint; defines all three configurations
-- `hosts/<name>/default.nix` — NixOS system config (boot, hardware, services)
-- `hosts/<name>/home.nix` — per-host home-manager entrypoint
-- `home/` — shared home-manager modules, **auto-imported** via `lib.my.listModulesRecursivly`
-- `modules/` — NixOS system-level modules, also auto-imported
-- `lib/default.nix` — defines `lib.my.listModulesRecursivly` (collects all `.nix` except `default.nix`)
+- `flake.nix` — Single entrypoint; defines all host configurations
+- `hosts/<name>/default.nix` — System-level config (NixOS or nix-darwin)
+  - Boot loader, hardware, networking, system services (NixOS only)
+  - System defaults and packages (all systems)
+- `hosts/<name>/home.nix` — Per-host home-manager entrypoint
+- `home/` — Shared home-manager modules, **auto-imported** via `lib.my.listModulesRecursivly`
+- `modules/` — NixOS system-level modules (not used on macOS or Ubuntu), auto-imported
+- `lib/default.nix` — Defines `lib.my.listModulesRecursivly` (collects all `.nix` except `default.nix`)
+
+## Platform-specific configurations
+
+### NixOS Hosts (`tobi`, `tobixx`, `contabo-server`)
+- Full system configuration including boot, hardware, networking
+- Uses systemd for service management
+- Can use agenix for secrets (integrated into flake)
+
+### macOS (`MN-EXLRFJ470Y77`)
+- Uses **nix-darwin** for system configuration (not traditional NixOS)
+- Uses **Homebrew** for additional packages via `hosts/macos/homebrew.nix`
+- Configures macOS defaults (key repeat, spell check, etc.)
+- Uses `darwin-rebuild` for deployments
+- Home-manager integration via nix-darwin modules
+
+### Ubuntu (`dwp7953`)
+- **Standalone home-manager only** (no NixOS or nix-darwin)
+- Does NOT auto-import from `home/` directory
+- Hand-picks only necessary modules: `core.nix`, `ai.nix`, `shell/`, `neovim/`
+- Avoids WM-specific configs (Hyprland, Waybar, Sway, Stylix) that don't apply to Ubuntu
+- When adding shared modules: if system-specific, explicitly add to Ubuntu's imports only if needed
 
 ## Ubuntu vs NixOS: key differences
 
@@ -74,11 +104,11 @@ Defined as `pkgs.writeShellScriptBin` in `hosts/ubuntu/home.nix`: `wg-toggle`, `
 
 There are no automated checks. Validate changes by running a rebuild against the target host.
 
-## Usernames
+## Usernames & Git Identity
 
-- NixOS hosts: user `tobi`, git identity `tobiornot2b / pgpg.toby@gmail.com`
-- Ubuntu: user `dwp7953`, git identity `Tobias Maede / tobias.maede.ext@dwpbank.de`
-- Contabo server: user `root`, git identity `tobiornot2b / pgpg.toby@gmail.com`
+- `tobi`, `tobixx`, `contabo-server`: git identity `tobiornot2b / pgpg.toby@gmail.com`
+- `dwp7953`: git identity `Tobias Maede / tobias.maede.ext@dwpbank.de`
+- `MN-EXLRFJ470Y77`: git identity `tobiornot2b / pgpg.toby@gmail.com`
 
 ## Contabo Server Setup
 
