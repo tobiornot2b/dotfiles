@@ -95,6 +95,15 @@
     "f /var/lib/apps/letsencrypt/acme.json 0600 root root -"
   ];
 
+  # agenix secrets
+  age.secrets."apps.env" = {
+    file = ../../secrets/contabo-server/apps.env.age;
+    path = "/var/lib/apps/.env";
+    owner = "root";
+    group = "root";
+    mode = "0600";
+  };
+
   # Deploy Docker Compose file to /etc
   environment.etc."apps/docker-compose.yaml".source = ./server/docker-compose.yaml;
 
@@ -107,6 +116,8 @@
     after = [
       "docker.service"
       "network-online.target"
+      "agenix-identity.service"
+      "agenix.service"
     ];
 
     wants = [
@@ -116,6 +127,7 @@
 
     restartTriggers = [
       ./server/docker-compose.yaml
+      config.age.secrets."apps.env".path
     ];
 
     serviceConfig = {
@@ -125,13 +137,13 @@
 
       ExecStart =
         "${pkgs.docker-compose}/bin/docker-compose "
-        + "--env-file /var/lib/apps/.env "
+        + "--env-file ${config.age.secrets."apps.env".path} "
         + "-f /etc/apps/docker-compose.yaml "
         + "up --detach --remove-orphans";
 
       ExecStop =
         "${pkgs.docker-compose}/bin/docker-compose "
-        + "--env-file /var/lib/apps/.env "
+        + "--env-file ${config.age.secrets."apps.env".path} "
         + "-f /etc/apps/docker-compose.yaml "
         + "down";
     };
