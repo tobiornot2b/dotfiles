@@ -130,7 +130,7 @@ in
 
   age.secrets."gh-token-tobiornot2b" = {
     file = ../../secrets/contabo-server/gh-token-tobiornot2b.age;
-    owner = "root";
+    owner = "tobias";
     group = "root";
     mode = "0400";
   };
