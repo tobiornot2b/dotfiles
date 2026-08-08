@@ -40,7 +40,8 @@ sudo nix-collect-garbage -d                   # system packages (NixOS/darwin on
 
 ### Contabo server (remote deployment)
 ```bash
-ssh root@62.84.178.194 'cd /root/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server'
+# root SSH login is disabled entirely — always use the tobias user (wheel, passwordless sudo)
+ssh tobias@62.84.178.194 'cd ~/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server'
 ```
 
 ## Architecture
@@ -147,8 +148,8 @@ Environment variables are encrypted with **agenix** using both server SSH host k
 # To edit secrets locally (requires server's SSH keys to be in ~/.ssh/)
 agenix -e secrets/contabo-server/apps.env.age
 
-# Deploy after changes
-ssh root@62.84.178.194 'cd /root/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server'
+# Deploy after changes — root SSH login is disabled, use tobias (wheel, passwordless sudo)
+ssh tobias@62.84.178.194 'cd ~/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server'
 ```
 
 **Contains**: `POSTGRES_PASSWORD`, `POSTGRES_USER`, `VIKUNJA_DATABASE_NAME`, `VIKUNJA_SERVICE_JWTSECRET`, `ACME_EMAIL`
@@ -157,14 +158,16 @@ ssh root@62.84.178.194 'cd /root/.dotfiles && git pull && sudo nixos-rebuild swi
 
 **When modifying the server, agents should:**
 
-1. **Work remotely via SSH** — Do NOT assume you're running locally on the Contabo machine
-   - Use `ssh root@62.84.178.194 'command'` to execute commands
+1. **Work remotely via SSH as `tobias`** — Do NOT assume you're running locally on the Contabo machine, and never use `root`
+   - Root SSH login is disabled entirely (`PermitRootLogin = "no"`) — there is no way in as root
+   - Use `ssh tobias@62.84.178.194 'command'` to execute commands
+   - `tobias` has passwordless `sudo` (wheel group) — prefix privileged commands with `sudo`
    - Use SSH to read/check files on the server
    
 2. **Follow the deployment pattern**:
    ```bash
    # Pull latest code
-   ssh root@62.84.178.194 'cd /root/.dotfiles && git pull'
+   ssh tobias@62.84.178.194 'cd ~/.dotfiles && git pull'
    
    # Make changes locally (in this repo), commit, and push
    git add <files>
@@ -172,7 +175,7 @@ ssh root@62.84.178.194 'cd /root/.dotfiles && git pull && sudo nixos-rebuild swi
    git push
    
    # Deploy on server
-   ssh root@62.84.178.194 'cd /root/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server'
+   ssh tobias@62.84.178.194 'cd ~/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server'
    ```
 
 3. **Modify Docker Compose services** — Edit `hosts/contabo-server/server/docker-compose.yaml`
@@ -198,12 +201,13 @@ ssh root@62.84.178.194 'cd /root/.dotfiles && git pull && sudo nixos-rebuild swi
 6. **Verify deployments**:
    ```bash
    # After deployment, verify via SSH
-   ssh root@62.84.178.194 'docker ps'
-   ssh root@62.84.178.194 'curl -I https://todo.tobiornot2b.com'
-   ssh root@62.84.178.194 'sudo systemctl status apps-compose'
+   ssh tobias@62.84.178.194 'docker ps'
+   ssh tobias@62.84.178.194 'curl -I https://todo.tobiornot2b.com'
+   ssh tobias@62.84.178.194 'sudo systemctl status apps-compose'
    ```
 
 7. **Don't assume running locally** — When writing scripts or commands:
-   - If they need to run on Contabo: Wrap in `ssh root@62.84.178.194 '...'`
+   - If they need to run on Contabo: Wrap in `ssh tobias@62.84.178.194 '...'`
    - If they're local development: Run directly without SSH
    - Be explicit about which machine the operation targets
+   - Never use `root` — SSH login as root is disabled; `tobias` has passwordless sudo for anything privileged

@@ -99,8 +99,8 @@ Environment variables are encrypted using **agenix** (age encryption) with:
 
 ### Initial Setup
 ```bash
-# On the server after OS installation:
-cd /root/.dotfiles
+# On the server after OS installation (as the tobias user — root SSH login is disabled):
+cd ~/.dotfiles
 git pull
 
 # Deploy the system configuration
@@ -111,7 +111,7 @@ sudo nixos-rebuild switch --flake .#contabo-server
 
 ```bash
 # Pull latest changes
-cd /root/.dotfiles
+cd ~/.dotfiles
 git pull
 
 # Rebuild and activate new configuration
@@ -139,7 +139,7 @@ git commit -m "chore: update server secrets"
 git push
 
 # Deploy on server
-cd /root/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server
+cd ~/.dotfiles && git pull && sudo nixos-rebuild switch --flake .#contabo-server
 ```
 
 ## Directory Structure
@@ -189,8 +189,8 @@ The service architecture uses two separate Docker networks for security:
 ### Monitoring
 
 ```bash
-# SSH into server
-ssh root@62.84.178.194
+# SSH into server (root login is disabled — tobias has passwordless sudo)
+ssh tobias@62.84.178.194
 
 # Check system resource usage
 htop
