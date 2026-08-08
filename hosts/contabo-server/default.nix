@@ -96,7 +96,7 @@ in
     docker
     docker-compose
     claude-code
-    nono
+    # nono comes from the llm-agents-nix flake input (see flake.nix) — not nixpkgs
   ];
 
   # Docker

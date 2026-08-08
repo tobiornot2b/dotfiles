@@ -133,6 +133,8 @@ Internet (HTTPS on port 443)
 - `secrets/contabo-server/apps.env.age` — Encrypted environment variables
 - `hosts/contabo-server/README.md` — Full architecture and operations guide
 
+**`nono` package**: sourced from the `llm-agents-nix` flake input (`github:numtide/llm-agents.nix`), not nixpkgs — nixpkgs' copy lags upstream. Wired in `flake.nix` (contabo-server's `environment.systemPackages` module block), not in `hosts/contabo-server/default.nix`. Run `nix flake update llm-agents-nix` to pull newer releases.
+
 ### Network Isolation
 
 - **`apps-web` network**: Only Traefik (public-facing, listens on ports 80/443)
