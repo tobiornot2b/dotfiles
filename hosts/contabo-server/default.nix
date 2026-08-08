@@ -91,6 +91,7 @@ in
     docker
     docker-compose
     claude-code
+    nono
   ];
 
   # Docker
