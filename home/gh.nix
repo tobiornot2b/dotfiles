@@ -12,6 +12,10 @@ in
     };
   };
 
+  # gh was set up manually before this module existed, so config.yml
+  # already exists on disk and needs to be handed over to home-manager.
+  xdg.configFile."gh/config.yml".force = true;
+
   # Populates hosts.yml from the agenix-decrypted token at activation time
   # instead of storing it in home.nix / the Nix store.
   home.activation.ghAuth = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
