@@ -91,6 +91,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
 
             home-manager.users."tobias.taschenberger" = import ./hosts/macos/home.nix;
           }
