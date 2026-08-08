@@ -1,5 +1,12 @@
 { config, pkgs, ... }:
 
+let
+  adminSshKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILZCMZVo8DvBYJRl0ksZsqYAn8MbCcZwUOQ7K8rZ7Vk/ tobias@dwp7953"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ6yNUxV27Kg/MucDGJEE7GMySzNLvH7HK98DgX4gJY1 tobias.maede@gmail.com"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ6hDIfFCmsCmX8dj+9CsZJpwYrJ2TohSkyL8IQnfxeU tobias.taschenberger@MN-EXLRFJ470Y77"
+  ];
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -53,12 +60,19 @@
     }
   ];
 
-  # Authorized SSH public keys for root
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILZCMZVo8DvBYJRl0ksZsqYAn8MbCcZwUOQ7K8rZ7Vk/ tobias@dwp7953"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ6yNUxV27Kg/MucDGJEE7GMySzNLvH7HK98DgX4gJY1 tobias.maede@gmail.com"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ6hDIfFCmsCmX8dj+9CsZJpwYrJ2TohSkyL8IQnfxeU tobias.taschenberger@MN-EXLRFJ470Y77"
-  ];
+  # Authorized SSH public keys for root (emergency/rescue access only —
+  # day-to-day admin work should use the "tobias" user below)
+  users.users.root.openssh.authorizedKeys.keys = adminSshKeys;
+
+  # Unprivileged admin user: sudo (wheel) + docker group, key-only login.
+  # No password is set anywhere on this host, so sudo trusts the SSH key
+  # that got you in rather than prompting for a password you don't have.
+  users.users.tobias = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "docker" ];
+    openssh.authorizedKeys.keys = adminSshKeys;
+  };
+  security.sudo.wheelNeedsPassword = false;
 
   # Disable sleep/suspend — not meaningful on a headless server
   systemd.targets.sleep.enable = false;

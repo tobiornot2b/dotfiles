@@ -68,6 +68,7 @@
                  home-manager.useGlobalPkgs = true;
                  home-manager.useUserPackages = true;
                  home-manager.users.root = import ./hosts/contabo-server/home.nix;
+                 home-manager.users.tobias = import ./hosts/contabo-server/home-tobias.nix;
                }
             ];
           };
