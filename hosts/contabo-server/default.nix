@@ -47,11 +47,12 @@ in
   # Locale
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # SSH: key-only root login, password authentication disabled.
-  # Add your public key to authorizedKeys before deploying — there is no
-  # other way in after installation (no password, no console login via SSH).
+  # SSH: root login disabled entirely, password authentication disabled.
+  # Admin access goes through the "tobias" user (wheel + passwordless sudo)
+  # below. If that ever breaks, use Contabo's rescue console to fix it —
+  # there is no other way in (no password, no root SSH).
   services.openssh.enable = true;
-  services.openssh.settings.PermitRootLogin = "prohibit-password";
+  services.openssh.settings.PermitRootLogin = "no";
   services.openssh.settings.PasswordAuthentication = false;
   services.openssh.hostKeys = [
     {
@@ -60,8 +61,8 @@ in
     }
   ];
 
-  # Authorized SSH public keys for root (emergency/rescue access only —
-  # day-to-day admin work should use the "tobias" user below)
+  # Kept so PermitRootLogin can be flipped back to "prohibit-password" for
+  # emergency access without hunting down keys again; inert while "no".
   users.users.root.openssh.authorizedKeys.keys = adminSshKeys;
 
   # Unprivileged admin user: sudo (wheel) + docker group, key-only login.
