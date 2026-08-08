@@ -67,6 +67,7 @@
   environment.systemPackages = with pkgs; [
     vim
     git
+    gh
     htop
     iotop
     netcat
