@@ -24,5 +24,6 @@
     "ghostty"
     "raycast"
     "sweet-home3d"
+    "logseq-og"
   ];
 }

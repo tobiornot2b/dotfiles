@@ -14,6 +14,10 @@
 
   programs.home-manager.enable = true;
 
+  services.syncthing = {
+    enable = true;
+  };
+
   programs.git = {
     enable = true;
     settings = {
