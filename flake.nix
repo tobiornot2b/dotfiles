@@ -14,11 +14,9 @@
     };
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    # nixpkgs' `nono` lags upstream; llm-agents.nix tracks the latest release.
-    llm-agents-nix.url = "github:numtide/llm-agents.nix";
   };
 
-  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, disko, stylix, nix-darwin, llm-agents-nix, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, xmonad-contrib, agenix, disko, stylix, nix-darwin, ... }@inputs:
     let 
       lib = nixpkgs.lib.extend (self: _: {my = import ./lib {lib = self;};});
       system = "x86_64-linux";
@@ -63,11 +61,7 @@
                agenix.nixosModules.default
                ./hosts/contabo-server
                {
-                 environment.systemPackages = [
-                   agenix.packages.${system}.default
-                   # Latest nono release — nixpkgs' copy lags upstream.
-                   llm-agents-nix.packages.${system}.nono
-                 ];
+                 environment.systemPackages = [ agenix.packages.${system}.default ];
                }
                home-manager.nixosModules.home-manager
                {
