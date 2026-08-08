@@ -107,6 +107,13 @@
     mode = "0600";
   };
 
+  age.secrets."gh-token-tobiornot2b" = {
+    file = ../../secrets/contabo-server/gh-token-tobiornot2b.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
   # Deploy Docker Compose file to /etc
   environment.etc."apps/docker-compose.yaml".source = ./server/docker-compose.yaml;
 

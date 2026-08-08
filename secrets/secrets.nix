@@ -7,4 +7,5 @@ in
 {
   "secret1.age".publicKeys = [ user1 ];
   "contabo-server/apps.env.age".publicKeys = hosts ++ users;
+  "contabo-server/gh-token-tobiornot2b.age".publicKeys = hosts ++ users;
 }
