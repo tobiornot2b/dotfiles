@@ -135,6 +135,13 @@ in
     mode = "0400";
   };
 
+  age.secrets."gh-token-omtomedical" = {
+    file = ../../secrets/contabo-server/gh-token-omtomedical.age;
+    owner = "tobias";
+    group = "root";
+    mode = "0400";
+  };
+
   # Deploy Docker Compose file to /etc
   environment.etc."apps/docker-compose.yaml".source = ./server/docker-compose.yaml;
 
