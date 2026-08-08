@@ -79,6 +79,11 @@ in
   systemd.targets.sleep.enable = false;
   systemd.targets.suspend.enable = false;
 
+  # Install terminfo entries for common terminal emulators (incl. Ghostty's
+  # xterm-ghostty) so SSH sessions from them render correctly without the
+  # manual `infocmp -x | ssh ... tic -x -` fix from ghostty.org/docs/help/terminfo.
+  environment.enableAllTerminfo = true;
+
   environment.systemPackages = with pkgs; [
     vim
     git
