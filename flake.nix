@@ -83,6 +83,12 @@
       };
     };
 
+    devShells.${system} = {
+      opencode = import ./shells/opencode.nix {
+        pkgs = nixpkgs.legacyPackages.${system};
+      };
+    };
+
     darwinConfigurations = {
       MN-EXLRFJ470Y77 = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";

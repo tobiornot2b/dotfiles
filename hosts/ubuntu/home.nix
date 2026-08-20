@@ -135,6 +135,7 @@ in
     brightness-up
     brightness-down
     brightnessctl
+    nerd-fonts.jetbrains-mono
     kind
     picom # needed compositor for xmonad
     dbeaver-bin

@@ -53,6 +53,19 @@
       ".." = "cd ..";
       "mvnis" = "mvn install -DskipTests -q -T 3C";
       "mvncis" = "mvn clean install -DskipTests -q -T 3C";
+      t = "tmux new-session -A -s main";
+      td = "tmux new-session -A -s dotfiles -c ~/.dotfiles";
     };
+
+    initExtra = ''
+      tm() {
+        if [ -z "$1" ]; then
+          echo "Usage: tm <session>" >&2
+          return 1
+        fi
+
+        tmux new-session -A -s "$1"
+      }
+    '';
   };
 }

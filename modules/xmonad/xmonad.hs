@@ -30,7 +30,7 @@ import qualified Data.List as L
 --- VARIABLES
 
 myTerminal :: String
-myTerminal = "alacritty"
+myTerminal = "/usr/bin/alacritty"
 
 myBrowser :: String
 myBrowser = "firefox"
@@ -97,7 +97,7 @@ myScratchpads =
   , NS "Zoom" "flatpak run us.zoom.Zoom" (className =? "zoom" <&&> title =? "Meeting") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "DrawIO" "google-chrome --app=https://app.diagrams.net --profile-directory='Default'" (resource =? "app.diagrams.net") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
   , NS "Teams" "google-chrome --app=https://teams.microsoft.com/v2/ --profile-directory='Default'" (resource =? "teams.microsoft.com__v2") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
-  , NS "Numbat" "alacritty --class numbat -e numbat" (resource =? "numbat") (customFloating $ W.RationalRect (1/4) (1/4) (1/2) (1/2))
+  , NS "Numbat" "/usr/bin/alacritty --class numbat -e numbat" (resource =? "numbat") (customFloating $ W.RationalRect (1/4) (1/4) (1/2) (1/2))
   ]
 
 -- Status bars and logging
