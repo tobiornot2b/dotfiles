@@ -83,11 +83,16 @@
       };
     };
 
-    devShells.${system} = {
-      opencode = import ./shells/opencode.nix {
-        pkgs = nixpkgs.legacyPackages.${system};
-      };
-    };
+    devShells = lib.genAttrs [ "x86_64-linux" "aarch64-darwin" ] (devSystem:
+      let devPkgs = nixpkgs.legacyPackages.${devSystem}; in {
+        opencode = import ./shells/opencode.nix {
+          pkgs = devPkgs;
+        };
+        pdf-spread = import ./shells/pdf-spread.nix {
+          pkgs = devPkgs;
+        };
+      }
+    );
 
     darwinConfigurations = {
       MN-EXLRFJ470Y77 = nix-darwin.lib.darwinSystem {
