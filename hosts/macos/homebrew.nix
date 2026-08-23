@@ -17,6 +17,7 @@
     # podman machine start
     "podman"
     "podman-compose"
+    "tailscale"
   ];
 
   homebrew.casks = [
@@ -25,5 +26,6 @@
     "raycast"
     "sweet-home3d"
     "logseq-og"
+    "dbeaver-community"
   ];
 }
