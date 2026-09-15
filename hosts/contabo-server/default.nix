@@ -96,6 +96,7 @@ in
     docker
     docker-compose
     claude-code
+    codex
     nono
   ];
 
