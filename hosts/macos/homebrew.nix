@@ -27,5 +27,8 @@
     "sweet-home3d"
     "logseq-og"
     "dbeaver-community"
+    "google-chrome"
+    "kdenlive"
+    "bruno"
   ];
 }

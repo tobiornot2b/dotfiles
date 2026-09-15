@@ -13,6 +13,7 @@
         [ 
           vim
           git
+          gh
           nodejs_24
         ];
 
