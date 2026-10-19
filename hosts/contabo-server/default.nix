@@ -11,6 +11,7 @@ in
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ./backup.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -98,6 +99,7 @@ in
     claude-code
     codex
     nono
+    nodejs_24 # latest Node.js major (bundles npm)
   ];
 
   # Docker
@@ -108,6 +110,14 @@ in
     80
     443
   ];
+
+  # Use the nftables firewall backend — required for extraInputRules below.
+  networking.nftables.enable = true;
+
+  # Allow containers on the Docker bridge network to reach these host ports.
+  networking.firewall.extraInputRules = ''
+    ip saddr 172.18.0.0/16 tcp dport { 9000, 9010, 8080 } accept
+  '';
 
   # Create directories for containerized applications
   systemd.tmpfiles.rules = [

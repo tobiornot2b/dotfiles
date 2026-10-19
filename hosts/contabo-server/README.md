@@ -206,16 +206,86 @@ sudo journalctl -u apps-compose -f
 curl https://todo.tobiornot2b.com
 ```
 
-### Database Backups
+### AWS Backup Prerequisites
 
-PostgreSQL data is persisted in `/var/lib/apps/postgres/data/`. Regular backups are recommended:
+Backups are stored in the AWS S3 bucket
+`tmaede-backup` in `eu-central-1`. Keep S3
+Block Public Access enabled. A bucket may contain independent Restic
+repositories under separate prefixes, for example `vikunja/` and
+`nextcloud/`.
+
+Create a dedicated IAM user such as `tmaede-restic-backup`, with no console
+access. Create an access key for it and attach the following inline policy. It
+limits the user to this bucket while allowing Restic to upload, restore, use
+multipart uploads, and prune expired backup data:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListResticBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetBucketLocation",
+        "s3:ListBucket",
+        "s3:ListBucketMultipartUploads"
+      ],
+      "Resource": "arn:aws:s3:::tmaede-backup"
+    },
+    {
+      "Sid": "ManageResticObjects",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:AbortMultipartUpload",
+        "s3:ListMultipartUploadParts"
+      ],
+      "Resource": "arn:aws:s3:::tmaede-backup/*"
+    }
+  ]
+}
+```
+
+Do not use an AWS root access key or `AmazonS3FullAccess`. `s3:DeleteObject`
+is required because the configured Restic retention task prunes unreferenced
+repository data. Store the access-key ID and secret access key only in the
+agenix-encrypted Restic secret described below.
+
+### Automated Vikunja Backups
+
+`vikunja-backup.timer` runs nightly at 01:00 (Europe/Berlin). It stops
+Vikunja briefly, creates a logical PostgreSQL dump plus a copy of the
+attachment directory, and sends the staging directory to the encrypted Restic
+repository in S3. PostgreSQL's raw data directory is intentionally not copied.
+
+Before deploying, create the two agenix secrets:
 
 ```bash
-# Manual backup
-docker exec apps-postgres-1 pg_dump -U $POSTGRES_USER $POSTGRES_DB > backup.sql
+agenix -e secrets/contabo-server/restic-s3.env.age
+agenix -e secrets/contabo-server/restic-password.age
+```
 
-# Restore from backup
-docker exec -i apps-postgres-1 psql -U $POSTGRES_USER $POSTGRES_DB < backup.sql
+`restic-s3.env.age` must use this dotenv format:
+
+```dotenv
+RESTIC_REPOSITORY=s3:s3.eu-central-1.amazonaws.com/tmaede-backup/vikunja
+AWS_DEFAULT_REGION=eu-central-1
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+```
+
+`restic-password.age` contains only a long, unique repository password. Keep
+an offline recovery copy of that password.
+
+Useful commands on the server:
+
+```bash
+sudo systemctl start vikunja-backup.service
+systemctl list-timers vikunja-backup.timer
+sudo journalctl -u vikunja-backup.service -n 100
 ```
 
 ### Certificate Renewal

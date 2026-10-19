@@ -7,6 +7,8 @@ in
 {
   "secret1.age".publicKeys = [ user1 ];
   "contabo-server/apps.env.age".publicKeys = hosts ++ users;
+  "contabo-server/restic-s3.env.age".publicKeys = hosts ++ users;
+  "contabo-server/restic-password.age".publicKeys = hosts ++ users;
   "contabo-server/gh-token-tobiornot2b.age".publicKeys = hosts ++ users;
   "contabo-server/gh-token-omtomedical.age".publicKeys = hosts ++ users;
 }
