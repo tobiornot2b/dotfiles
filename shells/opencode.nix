@@ -29,9 +29,10 @@ pkgs.mkShell {
     export UV_TOOL_BIN_DIR="$HOME/.local/bin"
     export PATH="$UV_TOOL_BIN_DIR:$PATH"
 
-    mkdir -p \
-      "$XDG_CONFIG_HOME" \
-      "$XDG_DATA_HOME" \
+     mkdir -p \
+       "$XDG_CONFIG_HOME" \
+       "$XDG_CONFIG_HOME/opencode" \
+       "$XDG_DATA_HOME" \
       "$XDG_CACHE_HOME" \
       "$XDG_STATE_HOME" \
       "$UV_TOOL_BIN_DIR"
@@ -53,10 +54,19 @@ pkgs.mkShell {
       cp -a "$OPENCODE_CONFIG_SKILLS/." "$OPENCODE_LOCAL_CONFIG_SKILLS/"
       echo "OpenCode devshell: konfigurationsbasierte Skills eingebunden"
     else
-      echo "OpenCode devshell: keine konfigurationsbasierten Skills gefunden"
-    fi
+       echo "OpenCode devshell: keine konfigurationsbasierten Skills gefunden"
+     fi
 
-    OPENCODE_AUTH_FILE="$HOST_HOME/.local/share/opencode/auth.json"
+     OPENCODE_CONFIG_FILE="$HOST_HOME/.opencode/opencode.json"
+     OPENCODE_LOCAL_CONFIG_FILE="$XDG_CONFIG_HOME/opencode/opencode.json"
+     if [ -r "$OPENCODE_CONFIG_FILE" ]; then
+       cp "$OPENCODE_CONFIG_FILE" "$OPENCODE_LOCAL_CONFIG_FILE"
+       echo "OpenCode devshell: provider-Konfiguration eingebunden"
+     else
+       echo "OpenCode devshell: keine opencode.json gefunden"
+     fi
+
+     OPENCODE_AUTH_FILE="$HOST_HOME/.local/share/opencode/auth.json"
     if [ -r "$OPENCODE_AUTH_FILE" ]; then
       export OPENCODE_AUTH_CONTENT="$(<"$OPENCODE_AUTH_FILE")"
       echo "OpenCode devshell: bestehende Credentials lesend eingebunden"
@@ -67,8 +77,10 @@ pkgs.mkShell {
     unset OPENCODE_AUTH_FILE
     unset OPENCODE_GLOBAL_SKILLS
     unset OPENCODE_LOCAL_SKILLS
-    unset OPENCODE_CONFIG_SKILLS
-    unset OPENCODE_LOCAL_CONFIG_SKILLS
-    unset HOST_HOME
+     unset OPENCODE_CONFIG_SKILLS
+     unset OPENCODE_LOCAL_CONFIG_SKILLS
+     unset OPENCODE_CONFIG_FILE
+     unset OPENCODE_LOCAL_CONFIG_FILE
+     unset HOST_HOME
   '';
 }

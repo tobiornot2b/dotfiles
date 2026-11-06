@@ -1,6 +1,17 @@
 {pkgs, config, ...}: 
 
 let
+  # clipcat 0.26.0 denies Rust lints removed by the current compiler. Remove
+  # those obsolete lint declarations so the package remains buildable.
+  clipcat-compat = pkgs.clipcat.overrideAttrs (old: {
+    postPatch = (old.postPatch or "") + ''
+      sed -i \
+        -e '/no_mangle_generic_items/d' \
+        -e '/repr_transparent_non_zst_fields/d' \
+        Cargo.toml
+    '';
+  });
+
   wg-toggle = pkgs.writeShellScriptBin "wg-toggle" ''
     INTERFACE="wg0"
     if sudo wg show "$INTERFACE" &>/dev/null; then
@@ -142,11 +153,12 @@ in
     jetbrains.idea
     maim # screenshot utility
     nodejs_24
-    clipcat # clipboard manager
+    clipcat-compat # clipboard manager
     dunst
     logseq
     bruno
     syncthing
+    devcontainer
   ];
 
   home.username = "dwp7953";
@@ -182,4 +194,20 @@ in
   # Create a symlink so the files can be changed without running home-manager again
   # Path needs to be absolute to be working
   home.file.".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "/home/dwp7953/.dotfiles/config/nvim";
+  
+  # Set up environment variables for Ubuntu host
+  home.sessionVariables = {
+    DOTFILES_DIR = "/home/dwp7953/.dotfiles";
+    SOURCE_DIR = "/home/dwp7953/source";
+  };
+  
+  # Add an alias to start the gelddispo session properly
+  programs.zsh.shellAliases.gd = ''
+    if ! tmux has-session -t gd 2>/dev/null; then
+      tmux new-session -d -s gd
+      tmux send-keys -t gd:1.1 'cd $DOTFILES_DIR && nix develop .#opencode' Enter
+      tmux send-keys -t gd:1.1 'cd $SOURCE_DIR/bc/oi/gelddisposition && headroom wrap opencode' Enter
+    fi
+    tmux attach -t gd 2>/dev/null || tmux switch-client -t gd
+  '';
 }

@@ -57,7 +57,7 @@
       td = "tmux new-session -A -s dotfiles -c ~/.dotfiles";
     };
 
-    initExtra = ''
+    initContent = ''
       tm() {
         if [ -z "$1" ]; then
           echo "Usage: tm <session>" >&2

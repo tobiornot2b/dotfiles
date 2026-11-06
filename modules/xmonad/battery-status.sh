@@ -36,4 +36,4 @@ else
   fi
 fi
 
-echo "<fn=1>$ICON</fn>  $PERCENTAGE"
+echo "<fn=1>$ICON</fn><fn=0>  </fn>$PERCENTAGE"

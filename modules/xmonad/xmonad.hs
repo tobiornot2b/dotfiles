@@ -73,6 +73,7 @@ myKeys =
         --- Other
        , ("M-<Tab>", sendMessage NextLayout)           -- Switch to next layout
        , ("M-a", namedScratchpadAction myScratchpads "ExxetaAI")
+       , ("M-S-a", namedScratchpadAction myScratchpads "Todo")
        , ("M-o", namedScratchpadAction myScratchpads "Logseq")
        , ("M-z", namedScratchpadAction myScratchpads "Zoom")
        , ("M-d", namedScratchpadAction myScratchpads "DrawIO")
@@ -93,6 +94,7 @@ myKeys =
 myScratchpads :: [NamedScratchpad]
 myScratchpads =
   [ NS "ExxetaAI" "google-chrome --app=http://chat.exxeta.info --profile-directory='Default'" (resource =? "chat.exxeta.info") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
+  , NS "Todo" "google-chrome --app=https://todo.tobiornot2b.com --profile-directory='Default'" (resource =? "todo.tobiornot2b.com") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
   , NS "Logseq" "logseq --no-sandbox" (className =? "Logseq") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "Zoom" "flatpak run us.zoom.Zoom" (className =? "zoom" <&&> title =? "Meeting") (customFloating $ W.RationalRect (1/8) (1/8) (3/4) (3/4))
   , NS "DrawIO" "google-chrome --app=https://app.diagrams.net --profile-directory='Default'" (resource =? "app.diagrams.net") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) 
