@@ -159,6 +159,7 @@ in
     bruno
     syncthing
     devcontainer
+    paseo-desktop
   ];
 
   home.username = "dwp7953";
